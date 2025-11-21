@@ -33,6 +33,9 @@ jobs:
           echo "$SSH_PRIVATE_KEY" > key.pem
           chmod 600 key.pem
 
+          # Ensure .ssh folder exists in the runner
+          mkdir -p ~/.ssh
+
           # Add server to known_hosts (if not already trusted)
           ssh-keygen -F $SERVER_HOST || ssh-keyscan -H $SERVER_HOST >> ~/.ssh/known_hosts
 
