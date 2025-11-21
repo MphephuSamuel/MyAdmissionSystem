@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Applicant Registration - Payment</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- Use PrimeFaces Theme for modern look -->
+    <h:outputStylesheet name="primefaces.css"/>
+    <h:outputScript name="primefaces.js"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+    
+    <!-- Custom Styling to match the application form -->
+    <style>
+        :root {
+            --primary-color: #1d2042;
+            --primary-light: #2a2e60;
+            --secondary-color: #3f51b5;
+            --accent-color: #ff5722;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --text-primary: #212121;
+            --text-secondary: #757575;
+            --divider-color: #eeeeee;
+            --background-light: #f8f9fa;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            background-color: #f4f7fb;
+            font-family: "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-primary);
+        }
+
+        .top-bar {
+            background-color: var(--primary-color);
+            padding: 15px 0;
+            color: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+
+        .top-bar-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .university-brand {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-container {
+            margin-right: 15px;
+        }
+
+        .logo-placeholder {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .university-name {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 500;
+            color: gold;
+        }
+
+        .form-wrapper {
+            max-width: 1100px;
+            margin: 30px auto;
+            background-color: #fff;
+            padding: 0;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+        }
+
+        .form-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 30px;
+            position: relative;
+        }
+
+        .form-header h2 {
+            margin: 0;
+            font-weight: 500;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-header h2 i {
+            margin-right: 10px;
+        }
+
+        .progress-indicator {
+            background-color: #ffffff;
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--divider-color);
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .progress-indicator:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background-color: #e0e0e0;
+            z-index: 0;
+        }
+
+        .progress-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 2px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .step-number.active {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #fff;
+        }
+
+        .step-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .step-label.active {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        .form-content {
+            padding: 30px;
+        }
+
+        .button-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding: 20px 30px;
+            background-color: var(--background-light);
+            border-top: 1px solid var(--divider-color);
+        }
+
+        .ui-button {
+            width: 48%;
+            border-radius: 30px !important;
+            padding: 12px 20px !important;
+            font-weight: 500 !important;
+            transition: background-color 0.3s, transform 0.2s !important;
+        }
+
+        .ui-button.primary {
+            background-color: var(--primary-color) !important;
+            color: white !important;
+            border: none !important;
+        }
+
+        .ui-button.secondary {
+            background-color: #fff !important;
+            color: var(--primary-color) !important;
+            border: 2px solid var(--primary-color) !important;
+        }
+
+        .ui-button:hover {
+            background-color: var(--primary-light) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .ui-button.secondary:hover {
+            background-color: rgba(29, 32, 66, 0.05) !important;
+        }
+
+        /* Payment specific styles */
+        .payment-notice {
+            background-color: #f9f9f9;
+            border-left: 4px solid var(--primary-color);
+            padding: 20px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .payment-amount {
+            font-size: 20px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .form-wrapper {
+                margin: 15px ;
+                border-radius: 8px;
+            }
+            
+            .form-content {
+                padding: 15px;
+            }
+            
+            .button-bar {
+                padding: 15px;
+                flex-direction: column;
+            }
+            
+            .ui-button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .progress-indicator {
+                padding: 15px;
+            }
+
+            .step-label {
+                display: none;
+            }
+        }
+        
+        .top-bar {
+            background-color: #1d2042;
+            color: #f9c73d;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            margin: 0; /* Remove any margin around the header */
+            position: relative; /* Keep relative positioning */
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-placeholder {
+            width: 50px;
+            height: 50px;
+            background-color: #ccc;
+            border-radius: 6px;
+            margin-right: 15px;
+        }
+
+        .title-text {
+            font-size: 1.4rem;
+            font-weight: bold;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        /* Content Wrapper */
+        .content-wrapper {
+            margin-top: 120px;
+            display: flex;
+            justify-content: center;
+            padding: 0 20px;
+        }
+
+        /* Centered Form */
+        .form-container {
+            width: 100%;
+            max-width: 600px;
+        }
+        
+        .logo {
+            width: 65px;
+            height: 65px;
+            margin-right: 5px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <!-- University Header -->
+    <div class="top-bar">
+        <h:graphicImage library="images" name="new-logo-preview.png" styleClass="logo" />
+        <div class="title-text">University of Mpumalanga</div>
+    </div>
+
+    <p:growl id="growl" showDetail="true" life="3000" />
+    
+    <f:event type="preRenderView" listener="#{paymentBean.handlePaymentPageAccess}" />
+    
+    <h:form>
+        <div class="form-wrapper">
+            <div class="form-header">
+                <h2><i class="fas fa-credit-card"></i> Application Payment</h2>
+            </div>
+            
+            <!-- Progress Indicator -->
+            <div class="progress-indicator">
+                <div class="progress-step">
+                    <div class="step-number">1</div>
+                    <span class="step-label">Personal Details</span>
+                </div>
+                <div class="progress-step">
+                    <div class="step-number">2</div>
+                    <span class="step-label">Next of Kin</span>
+                </div>
+                <div class="progress-step">
+                    <div class="step-number">3</div>
+                    <span class="step-label">Programme Selection</span>
+                </div>
+                <div class="progress-step">
+                    <div class="step-number">4</div>
+                    <span class="step-label">Upload Documents</span>
+                </div>
+                <div class="progress-step">
+                    <div class="step-number active">5</div>
+                    <span class="step-label active">Payment</span>
+                </div>
+            </div>
+            
+            <div class="form-content">
+                <div class="payment-notice">
+                    <p>Please note that an application fee of R100 is required to process your application. This fee is non-refundable regardless of the outcome of your application.</p>
+                    
+                    <div class="payment-amount">
+                        Application Fee: R100.00
+                    </div>
+                    
+                    <p>Upon clicking "Proceed to Payment", you will be redirected to our secure payment gateway where you can complete your payment using various methods including credit/debit cards, instant EFT, or bank transfer.</p>
+                </div>
+            </div>
+            
+            <!-- Action Buttons -->
+            <div class="button-bar">
+                <p:commandButton value="Back to Documents"
+                                action="uploadDocuments.xhtml?faces-redirect=true"
+                                styleClass="ui-button secondary"
+                                icon="fas fa-arrow-left" />
+                            
+                <p:commandButton value="Proceed to Payment"
+                                action="#{paymentBean.redirectToPayFast}"
+                                styleClass="ui-button primary"
+                                icon="fas fa-arrow-right" />
+            </div>
+        </div>
+    </h:form>
+</h:body>
+</html>

@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Confirm Application</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+    <style>
+        :root {
+            --primary-color: #1d2042;
+            --primary-light: #2a2e60;
+            --secondary-color: #3f51b5;
+            --accent-color: #ff5722;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --text-primary: #212121;
+            --text-secondary: #757575;
+            --divider-color: #eeeeee;
+            --background-light: #f8f9fa;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            background-color: #f4f7fb;
+            font-family: "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-primary);
+        }
+
+        .top-bar {
+            background-color: var(--primary-color);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .logo-container {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            margin-right: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .logo-placeholder {
+            font-size: 24px;
+            color: var(--primary-color);
+        }
+
+        .university-name {
+            color: white;
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .form-wrapper {
+            max-width: 1100px;
+            margin: 120px auto;
+            background-color: #fff;
+            padding: 0;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+        }
+
+        .form-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 30px;
+            position: relative;
+        }
+
+        .form-header h2 {
+            margin: 0;
+            font-weight: 500;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-header h2 i {
+            margin-right: 10px;
+        }
+
+        .progress-container {
+            background-color: #ffffff;
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--divider-color);
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .progress-bar:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 4px;
+            width: 100%;
+            background-color: #e0e0e0;
+            z-index: 0;
+        }
+
+        .progress-bar:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 4px;
+            width: 75%;
+            background-color: var(--primary-color);
+            z-index: 0;
+        }
+
+        .step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 2px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step.active {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #fff;
+        }
+
+        .step-label {
+            position: absolute;
+            top: 40px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            width: 100px;
+            text-align: center;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .step.active .step-label {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .form-content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            border-radius: 8px;
+            overflow: hidden;
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        .section-title {
+            background-color: var(--background-light);
+            padding: 12px 15px;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+
+        .section-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .data-row {
+            display: flex;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--divider-color);
+            padding-bottom: 10px;
+        }
+
+        .data-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .data-label {
+            width: 30%;
+            font-weight: 500;
+            color: var(--text-secondary);
+            padding-right: 15px;
+        }
+
+        .data-value {
+            width: 70%;
+            color: var(--text-primary);
+        }
+
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .data-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            box-shadow: var(--card-shadow);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .data-table th {
+            background-color: var(--background-light);
+            padding: 12px 15px;
+            text-align: left;
+            color: var(--text-primary);
+            font-weight: 500;
+            border-bottom: 2px solid var(--divider-color);
+        }
+
+        .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--divider-color);
+        }
+
+        .data-table tr:nth-child(even) {
+            background-color: var(--background-light);
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .button-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding: 20px 30px;
+            background-color: var(--background-light);
+            border-top: 1px solid var(--divider-color);
+        }
+
+        .ui-button {
+            width: 48%;
+            border-radius: 30px !important;
+            padding: 12px 20px !important;
+            font-weight: 500 !important;
+            transition: background-color 0.3s, transform 0.2s !important;
+        }
+
+        .ui-button.primary {
+            background-color: var(--primary-color) !important;
+            color: white !important;
+            border: none !important;
+        }
+
+        .ui-button.secondary {
+            background-color: #fff !important;
+            color: var(--primary-color) !important;
+            border: 2px solid var(--primary-color) !important;
+        }
+
+        .ui-button:hover {
+            background-color: var(--primary-light) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .ui-button.secondary:hover {
+            background-color: rgba(29, 32, 66, 0.05) !important;
+        }
+
+        @media (max-width: 768px) {
+            .button-bar {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .ui-button {
+                width: 100%;
+            }
+
+            .university-name {
+                font-size: 16px;
+            }
+        }
+        
+        
+            .top-bar {
+                background-color: #1d2042;
+                color: #f9c73d;
+                padding: 15px 30px;
+                display: flex;
+                align-items: center;
+                width: 100%;
+                position: absolute;
+                top: 0;
+            }
+
+            .logo-placeholder {
+                width: 50px;
+                height: 50px;
+                background-color: #ccc;
+                border-radius: 6px;
+                margin-right: 15px;
+            }
+
+            .bar-title {
+                font-size: 1.4rem;
+                font-weight: bold;
+            }
+
+            .logo {
+                width: 65px;
+                height: 65px;
+                margin-right: 5px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+    </style>
+</h:head>
+
+<h:body>
+    <!-- Top bar with logo -->
+    <div class="top-bar">
+        <h:graphicImage library="images" name="new-logo-preview.png" styleClass="logo" />
+        <div class="bar-title">University of Mpumalanga</div>
+    </div>
+    
+    <h:form styleClass="form-wrapper">
+        <p:growl id="growl" showDetail="true" life="3000" />
+        
+        <!-- Header -->
+        <div class="form-header">
+            <h2><i class="fas fa-clipboard-check"></i> Application Confirmation</h2>
+        </div>
+        
+        <!-- Progress indicator -->
+        <div class="progress-container">
+            <div class="progress-bar">
+                <div class="step active">
+                    1
+                    <div class="step-label">Personal Details</div>
+                </div>
+                <div class="step active">
+                    2
+                    <div class="step-label">Next of Kin</div>
+                </div>
+                <div class="step active">
+                    3
+                    <div class="step-label">Education</div>
+                </div>
+                <div class="step active">
+                    4
+                    <div class="step-label">Review</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="form-content">
+            <!-- Personal Details Section -->
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-user"></i> Personal Details
+                </div>
+                <div class="section-content">
+                    <div class="data-grid">
+                        <div class="data-row">
+                            <div class="data-label">Title:</div>
+                            <div class="data-value">#{confirmBean.applicant.title}</div>
+                        </div>
+                        <div class="data-row">
+                            <div class="data-label">ID Number:</div>
+                            <div class="data-value">#{confirmBean.applicant.idNumber}</div>
+                        </div>
+                        <div class="data-row">
+                            <div class="data-label">First Name:</div>
+                            <div class="data-value">#{confirmBean.applicant.firstName}</div>
+                        </div>
+                        <div class="data-row">
+                            <div class="data-label">Middle Name:</div>
+                            <div class="data-value">#{confirmBean.applicant.middleName}</div>
+                        </div>
+                        <div class="data-row">
+                            <div class="data-label">Last Name:</div>
+                            <div class="data-value">#{confirmBean.applicant.lastName}</div>
+                        </div>
+                        <div class="data-row">
+                            <div class="data-label">Gender:</div>
+                            <div class="data-value">#{confirmBean.applicant.gender}</div>
+                        </div>
+                        <div class="data-row">
+                            <div class="data-label">Marital Status:</div>
+                            <div class="data-value">#{confirmBean.applicant.marriageStatus}</div>
+                        </div>
+                        <div class="data-row">
+                            <div class="data-label">Disability:</div>
+                            <div class="data-value">#{confirmBean.applicant.disability}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Contact Information Section -->
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-address-card"></i> Contact Information
+                </div>
+                <div class="section-content">
+                    <div class="data-grid">
+                        <div class="data-row">
+                            <div class="data-label">Home Language:</div>
+                            <div class="data-value">#{confirmBean.applicant.homeLanguage}</div>
+                        </div>
+                        <div class="data-row">
+                            <div class="data-label">Alternative Language:</div>
+                            <div class="data-value">#{confirmBean.applicant.alternativeLanguage}</div>
+                        </div>
+                        <div class="data-row">
+                            <div class="data-label">Phone Number:</div>
+                            <div class="data-value">#{confirmBean.applicant.phoneNumber}</div>
+                        </div>
+                        <div class="data-row">
+                            <div class="data-label">Alternative Phone:</div>
+                            <div class="data-value">#{confirmBean.applicant.alternativePhoneNumber}</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px;">
+                        <div class="data-row">
+                            <div class="data-label">Home Address:</div>
+                            <div class="data-value">#{confirmBean.applicant.homeAddress}</div>
+                        </div>
+                        <div class="data-row">
+                            <div class="data-label">Postal Address:</div>
+                            <div class="data-value">#{confirmBean.applicant.postalAddress}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next of Kin Section -->
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-user-friends"></i> Next of Kin
+                </div>
+                <div class="section-content">
+                    <div class="data-grid">
+                        <div class="data-row">
+                            <div class="data-label">Name:</div>
+                            <div class="data-value">#{confirmBean.nextOfKin.name}</div>
+                        </div>
+                        <div class="data-row">
+                            <div class="data-label">Surname:</div>
+                            <div class="data-value">#{confirmBean.nextOfKin.surname}</div>
+                        </div>
+                        <div class="data-row">
+                            <div class="data-label">Phone Number:</div>
+                            <div class="data-value">#{confirmBean.nextOfKin.phoneNumber}</div>
+                        </div>
+                        <div class="data-row">
+                            <div class="data-label">Email:</div>
+                            <div class="data-value">#{confirmBean.nextOfKin.email}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Payment Section -->
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-money-bill-wave"></i> Payment Information
+                </div>
+                <div class="section-content">
+                    <div class="data-row">
+                        <div class="data-label">Amount Paid:</div>
+                        <div class="data-value">R #{confirmBean.payment.amount}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Marks Section -->
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-chart-line"></i> Academic Marks
+                </div>
+                <div class="section-content">
+                    <p:dataTable value="#{confirmBean.marks}" var="mark" 
+                                styleClass="data-table"
+                                rowIndexVar="rowIndex">
+                        <p:column headerText="Subject">
+                            <h:outputText value="#{mark.subject.name}" />
+                        </p:column>
+                        <p:column headerText="Exam Year">
+                            <h:outputText value="#{mark.examYear}" />
+                        </p:column>
+                        <p:column headerText="Final Mark (%)">
+                            <h:outputText value="#{mark.percentage}" />
+                        </p:column>
+                        <p:column headerText="Level">
+                            <h:outputText value="#{mark.level}" />
+                        </p:column>
+                        <p:column headerText="Grade">
+                            <h:outputText value="#{mark.gradeLevel}" />
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+
+            <!-- Programme Applications Section -->
+            <div class="section">
+                <div class="section-title">
+                    <i class="fas fa-graduation-cap"></i> Selected Programmes
+                </div>
+                <div class="section-content">
+                    <p:dataTable value="#{confirmBean.applications}" var="app" 
+                                styleClass="data-table"
+                                rowIndexVar="rowIndex">
+                        <p:column headerText="Choice Number">
+                            <h:outputText value="#{app.choiceNumber}" />
+                        </p:column>
+                        <p:column headerText="Programme Name">
+                            <h:outputText value="#{confirmBean.getProgrammeName(app.programme.id)}"/>
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="button-bar">
+            <p:commandButton value="Back to Edit" 
+                            action="#{confirmBean.goBack}" 
+                            styleClass="ui-button secondary"
+                            icon="fas fa-arrow-left" />
+            
+            <p:commandButton value="Submit Application" 
+                            action="#{confirmBean.submitApplication}" 
+                            styleClass="ui-button primary"
+                            icon="fas fa-check-circle" />
+        </div>
+    </h:form>
+
+    <!-- JavaScript for enhanced interactions -->
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Animation for form sections on page load
+            $(".section").each(function(i) {
+                $(this).css({
+                    'animation-delay': (i * 0.1) + 's'
+                });
+            });
+        });
+    </script>
+</h:body>
+</html>

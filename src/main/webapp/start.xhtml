@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui">
+<f:view>
+     <f:metadata>
+        <f:viewAction action="#{temporalApplicantBean.clearSession}" />
+    </f:metadata>
+    <h:head>
+        <title>Start Application | UMP</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <style>
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: white;
+                margin: 0;
+                padding: 0;
+            }
+
+            .top-bar {
+                background-color: #1d2042;
+                color: #f9c73d;
+                padding: 15px 30px;
+                display: flex;
+                align-items: center;
+            }
+
+            .bar-title {
+                font-size: 1.4rem;
+                font-weight: bold;
+            }
+
+            .main-content {
+                padding: 40px 30px;
+            }
+
+            .main-layout {
+                display: flex;
+                justify-content: center;
+                align-items: flex-start;
+                flex-direction: row;
+                gap: 40px;
+                flex-wrap: wrap;
+            }
+
+            .centered-box, .terms-box {
+                padding: 30px;
+                background-color: white;
+                border-radius: 10px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                max-width: 500px;
+                flex: 1;
+            }
+
+            .terms-box {
+                font-size: 0.95rem;
+                line-height: 1.5;
+                color: #333;
+            }
+
+            .box-header {
+                background-color: #1d2042;
+                color: white;
+                padding: 12px 20px;
+                font-size: 1.1rem;
+                font-weight: bold;
+                border-top-left-radius: 10px;
+                border-top-right-radius: 10px;
+                margin: -30px -30px 20px -30px;
+            }
+
+            .button-style {
+                margin-top: 20px;
+                background-color: #1d2042;
+                color: white;
+                width: 100%;
+            }
+
+            .button-style:hover {
+                background-color: #14162c;
+            }
+
+            .spacer {
+                height: 20px;
+            }
+
+            .ui-selectoneradio label {
+                margin-right: 20px;
+            }
+
+            #idSection {
+                display: none;
+                margin-top: 20px;
+            }
+
+            .ui-growl {
+                top: 50% !important;
+                left: 50% !important;
+                transform: translate(-50%, -50%) !important;
+                position: fixed !important;
+                z-index: 10000;
+            }
+
+            a {
+                color: #1d2042;
+                font-weight: bold;
+                text-decoration: underline;
+            }
+
+            .logo-left {
+                text-align: left;
+                margin-bottom: 30px;
+            }
+        </style>
+
+        <script>
+            function toggleIdSection() {
+                var radio = $("input[name='form:studentNumberCheck']:checked");
+                var idSection = document.getElementById("idSection");
+                var continueButton = document.getElementById("form:continue-button");
+
+                if (radio.length > 0) {
+                    if (radio.val() === "no") {
+                        idSection.style.display = "block";
+                        continueButton.style.display = "none";
+                        PF('prospectusDialog').show();
+                        autoCloseDialog();
+                    } else {
+                        // Redirect immediately to login page
+                        window.location.href = 'login.xhtml';
+                    }
+                }
+            }
+
+            function autoCloseDialog() {
+                setTimeout(function () {
+                    PF('prospectusDialog').hide();
+                }, 10000); // 10 seconds
+            }
+        </script>
+    </h:head>
+
+    <h:body>
+        <!-- Dialog for downloading prospectus -->
+        <p:dialog id="prospectusDialog" widgetVar="prospectusDialog" modal="true" closable="true" draggable="false" resizable="false"
+                  header="Welcome to UMP!" visible="false" showEffect="fade" hideEffect="fade" style="text-align: center;">
+            <h:outputText value="To know the courses we offer, please download our Prospectus here:"
+                          style="display: block; margin-bottom: 15px;" />
+
+            <h:outputLink value="#{resource['Prospectus:UndergraduateProgrammes.pdf']}"
+                          styleClass="button-style"
+                          target="_blank">
+                Download Prospectus
+                <f:passThroughAttribute name="download" value="UndergraduateProgrammes.pdf" />
+            </h:outputLink>
+        </p:dialog>
+
+        <!-- Top UMP Bar -->
+        <div class="top-bar">
+            <div class="bar-title">University of Mpumalanga</div>
+        </div>
+
+        <!-- Main Content Section -->
+        <div class="main-content">
+            <!-- Logo aligned to the left -->
+            <div class="logo-left">
+                <h:graphicImage library="images" name="ump_logo.png" alt="UMP Logo" width="500"
+                                style="max-width: 100%; height: auto;" />             
+            </div>
+
+            <!-- Side by side layout -->
+            <div class="main-layout">
+                <!-- Terms and Conditions Box -->
+                <div class="terms-box">
+                    <div class="box-header">Prospective Students</div>
+                    <p>If you are a prospective student, not registered at this institution, please click the following link to read terms and conditions:</p>
+                    <p>
+                        <a href="TermsandConditions.xhtml" target="_blank">View Terms and Conditions</a>
+                    </p>
+                </div>
+
+                <!-- Form Content -->
+                <h:form id="form">
+                    <p:growl id="loginGrowl" showDetail="true" life="3000" />
+
+                    <h:panelGroup rendered="#{not temporalApplicantBean.applicationOpened}">
+                        <div class="centered-box">
+                            <div class="box-header">Application Closed</div>
+                            <h:outputText value="The application period is currently closed." />
+
+                            <p:spacer height="20"/>
+                            <p:commandButton id="login-button-closed"
+                                             value="Go To Login"
+                                             styleClass="button-style"
+                                             action="login.xhtml?faces-redirect=true"
+                                             process="@this" />
+                        </div>
+                    </h:panelGroup>
+
+
+
+                     <!-- When application is OPEN -->
+                    <h:panelGroup rendered="#{temporalApplicantBean.applicationOpened}">
+                    <div class="centered-box">
+                        <div class="box-header">Start Your Application</div>
+
+                        <p:spacer styleClass="spacer"/>
+
+                        <h:outputLabel for="studentNumberCheck" value="Do you already have a student number?" style="font-weight: bold;" />
+                        <p:selectOneRadio id="studentNumberCheck" value="#{temporalApplicantBean.hasStudentNumber}" onchange="toggleIdSection()">
+                            <f:selectItem itemLabel="Yes" itemValue="yes"/>
+                            <f:selectItem itemLabel="No" itemValue="no"/>
+                        </p:selectOneRadio>
+
+                        <p:spacer styleClass="spacer"/>
+
+                        <p:commandButton id="continue-button"
+                                         value="Go To Login"
+                                         styleClass="button-style"
+                                         action="login.xhtml?faces-redirect=true"
+                                         process="@this" />
+
+                        <div id="idSection">
+                            <p:spacer height="20"/>
+                            <h:outputLabel for="idNumber" value="Enter your ID number:" style="font-weight: bold;" />
+                            <p:inputText id="idNumber" 
+                                         value="#{temporalApplicantBean.idNumber}" 
+                                         style="width: 100%;"
+                                         required="true"
+                                         requiredMessage="ID Number is required and must be 13 digits."
+                                         validatorMessage="ID Number must be exactly 13 digits.">
+                                <f:validateRegex pattern="^\d{13}$" />
+                            </p:inputText>
+                            <p:message for="idNumber" style="color:red" />
+
+                            <p:commandButton value="Continue to Registration"
+                                             action="#{temporalApplicantBean.continueAction}"
+                                             update=":form:loginGrowl"
+                                             styleClass="button-style" />
+                        </div>
+                    </div>
+                    </h:panelGroup>
+                </h:form>
+            </div>
+        </div>
+    </h:body>
+    </f:view>
+</html>

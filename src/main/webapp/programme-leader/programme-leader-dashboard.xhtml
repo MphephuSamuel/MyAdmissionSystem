@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+    <title>Programme Leader Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <style>
+        /* Base styles remain unchanged */
+body {
+    background-color: #f4f6fc;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #0a1f44;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar {
+    background-color: #0a1f44;
+    padding: 15px 30px;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    box-shadow: 0 4px 6px rgba(0, 0, 50, 0.2);
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.container {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.section {
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 50, 0.1);
+    padding: 20px;
+    overflow-x: auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.welcome-message {
+    font-size: 20px;
+    margin-bottom: 20px;
+    font-weight: 500;
+    word-wrap: break-word;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: auto; /* Remove fixed min-width */
+    table-layout: auto; /* Allow table to adjust based on content */
+}
+
+th, td {
+    padding: 12px 15px;
+    text-align: left;
+    word-break: break-word; /* Allow text to break to prevent overflow */
+}
+
+th {
+    background-color: #0a1f44;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+td {
+    background-color: #f9fbfd;
+    border-bottom: 1px solid #dddddd;
+}
+
+.marks-table {
+    margin-top: 10px;
+    background-color: #eef3fc;
+    border: 1px solid #cbd6ee;
+    border-radius: 5px;
+    padding: 10px;
+    overflow-x: auto;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.decision-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 5px;
+}
+
+.btn-admit, .btn-reject, .btn-waitlist, .btn-revoke, .btn-reevaluate {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    width: auto;
+    min-width: 80px;
+    text-align: center;
+}
+
+.btn-admit {
+    background-color: #2e7d32;
+    color: white;
+}
+
+.btn-admit:hover {
+    background-color: #1b5e20;
+}
+
+.btn-reject {
+    background-color: #c62828;
+    color: white;
+}
+
+.btn-reject:hover {
+    background-color: #8e0000;
+}
+
+.btn-waitlist {
+    background-color: #f9a825;
+    color: white;
+}
+
+.btn-waitlist:hover {
+    background-color: #c17900;
+}
+
+.btn-toggle {
+    background-color: #1976d2;
+    color: white;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 8px;
+    width: 100%;
+    max-width: 120px;
+}
+
+.btn-toggle:hover {
+    background-color: #115293;
+}
+
+.logout-section {
+    text-align: center;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.logout-button {
+    background-color: #e53935;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    max-width: 200px;
+    width: 100%;
+}
+
+.logout-button:hover {
+    background-color: #c62828;
+}
+
+.btn-revoke {
+    background-color: #5e35b1 !important;
+    color: white !important;
+}
+
+.btn-revoke:hover {
+    background-color: #4527a0 !important;
+}
+
+.btn-reevaluate {
+    background-color: #0277bd !important;
+    color: white !important;
+}
+
+.btn-reevaluate:hover {
+    background-color: #01579b !important;
+}
+
+.progress-container {
+    margin-bottom: 20px !important;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.progress-label {
+    font-weight: 600 !important;
+    margin-bottom: 6px !important;
+    color: #0a1f44 !important;
+    display: flex !important;
+    flex-wrap: wrap;
+    justify-content: space-between !important;
+    align-items: center !important;
+    gap: 10px;
+}
+
+.rejected-section {
+    background-color: #fff5f5 !important;
+    border-left: 5px solid #c62828 !important;
+}
+
+.accepted-section {
+    background-color: #f5fff5 !important;
+    border-left: 5px solid #2e7d32 !important;
+}
+
+.progress-container {
+    margin-bottom: 20px !important;
+    background-color: #ffffff !important;
+    border-radius: 8px !important;
+    padding: 15px !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1) !important;
+    border-left: 5px solid #1976d2 !important;
+}
+
+.progress-bar-container {
+    width: 100% !important;
+    height: 20px !important;
+    background-color: #e0e0e0 !important;
+    border-radius: 10px !important;
+    overflow: hidden !important;
+    margin-top: 10px !important;
+}
+
+.progress-bar {
+    height: 100% !important;
+    background: linear-gradient(to right, #2e7d32, #4caf50) !important;
+    border-radius: 10px !important;
+    transition: width 0.5s ease-in-out !important;
+    position: relative !important;
+}
+
+.progress-text {
+    color: #0a1f44 !important;
+    font-weight: 600 !important;
+    font-size: 16px !important;
+}
+
+.progress-indicator {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin-top: 5px !important;
+}
+
+.capacity-warning {
+    padding: 5px 10px !important;
+    border-radius: 20px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    display: inline-block !important;
+    margin-left: 10px !important;
+}
+
+.capacity-low {
+    background-color: #e3f2fd !important;
+    color: #0277bd !important;
+}
+
+.capacity-medium {
+    background-color: #fff8e1 !important;
+    color: #f57c00 !important;
+}
+
+.capacity-high {
+    background-color: #f9e5e5 !important;
+    color: #c62828 !important;
+}
+
+.waitlisted-section {
+    background-color: #fffcf5 !important;
+    border-left: 5px solid #f9a825 !important;
+    padding: 6px 12px !important;
+    border-radius: 4px !important;
+}
+
+/* Enhanced Responsive Styles */
+@media (max-width: 992px) {
+    .navbar {
+        padding: 12px 20px;
+    }
+    
+    .container {
+        padding: 15px;
+        gap: 20px;
+    }
+    
+    .section {
+        padding: 15px;
+    }
+    
+    table {
+        font-size: 15px;
+    }
+    
+    th, td {
+        padding: 10px 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        font-size: 20px;
+        padding: 12px 15px;
+    }
+    
+    .container {
+        padding: 12px;
+        gap: 18px;
+    }
+    
+    .section {
+        padding: 12px;
+    }
+    
+    .welcome-message {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+    
+    table {
+        font-size: 14px;
+    }
+    
+    th, td {
+        padding: 8px 10px;
+    }
+    
+    .progress-label {
+        font-size: 16px !important;
+        flex-direction: column;
+        align-items: flex-start !important;
+    }
+    
+    .progress-text {
+        font-size: 14px !important;
+    }
+    
+    .btn-admit, .btn-reject, .btn-waitlist, .btn-revoke, .btn-reevaluate {
+        padding: 8px 10px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar {
+        font-size: 18px;
+        padding: 10px;
+    }
+    
+    .container {
+        padding: 10px;
+        gap: 15px;
+    }
+    
+    .section {
+        padding: 10px;
+    }
+    
+    .welcome-message {
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+    
+    table {
+        font-size: 13px;
+    }
+    
+    th, td {
+        padding: 6px 8px;
+    }
+    
+    .decision-buttons {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .btn-admit, .btn-reject, .btn-waitlist, .btn-revoke, .btn-reevaluate {
+        width: 100%;
+        padding: 8px;
+        font-size: 13px;
+        margin: 2px 0;
+    }
+    
+    .btn-toggle {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .progress-bar-container {
+        height: 15px !important;
+    }
+    
+    .capacity-warning {
+        padding: 3px 8px !important;
+        font-size: 12px !important;
+        margin-top: 5px;
+        margin-left: 0 !important;
+    }
+    
+    .logout-button {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+    
+    .progress-container {
+        padding: 10px !important;
+    }
+}
+
+@media (max-width: 400px) {
+    .navbar {
+        font-size: 16px;
+    }
+    
+    .welcome-message {
+        font-size: 15px;
+    }
+    
+    table {
+        font-size: 12px;
+    }
+    
+    th, td {
+        padding: 5px 6px;
+    }
+    
+    .btn-admit, .btn-reject, .btn-waitlist, .btn-revoke, .btn-reevaluate, .btn-toggle {
+        font-size: 12px;
+        padding: 6px;
+    }
+    
+    .logout-button {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+    
+    /* Add horizontal scrolling for tables on very small screens */
+    .section {
+        overflow-x: auto;
+    }
+    
+    table {
+        min-width: 350px; /* Minimum reasonable width for tables */
+    }
+}
+
+/* Make sure the viewport meta tag is properly set */
+@-ms-viewport {
+    width: device-width;
+}
+
+/* Document download buttons */
+.document-buttons {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.btn-download {
+    background-color: #455a64;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    width: auto;
+    min-width: 110px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.btn-download:hover {
+    background-color: #263238;
+}
+
+.btn-download-id {
+    background-color: #00796b;
+}
+
+.btn-download-id:hover {
+    background-color: #004d40;
+}
+
+.btn-download-g12 {
+    background-color: #5e35b1;
+}
+
+.btn-download-g12:hover {
+    background-color: #4527a0;
+}
+
+.panel-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.document-icon {
+    font-size: 14px;
+    margin-bottom: 4px;
+}
+
+@media (max-width: 576px) {
+    .document-buttons {
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .btn-download {
+        width: 100%;
+        padding: 6px 8px;
+        font-size: 11px;
+    }
+}
+
+.document-actions-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.document-buttons-inline {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-left: 16px;
+}
+
+.sidebar {
+    position: fixed;
+    height: 100%;
+    width: 250px;
+    background-color: #0a1f44;
+    color: white;
+    padding-top: 20px;
+    box-shadow: 2px 0 5px rgba(0, 0, 50, 0.2);
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.sidebar-header {
+    padding: 0 20px 20px;
+    font-size: 20px;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    margin-bottom: 20px;
+}
+
+.sidebar-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu li {
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-menu a {
+    display: block;
+    padding: 15px 20px;
+    color: #f4f6fc;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-left: 4px solid transparent;
+}
+
+.sidebar-menu a:hover, .sidebar-menu a.active {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-left: 4px solid #1976d2;
+}
+
+.sidebar-menu i {
+    margin-right: 10px;
+}
+
+.sidebar-footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 20px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-button {
+    display: inline-block;
+    width: 90%;
+    margin: 5px auto;
+    padding: 12px;
+    background-color: transparent;
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sidebar-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-logout {
+    width: 80%;
+    margin: 15px auto;
+    background-color: #c62828;
+}
+
+.sidebar-logout:hover {
+    background-color: #8e0000;
+}
+
+.sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background-color: #0a1f44;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px;
+    z-index: 1001;
+    cursor: pointer;
+}
+
+/* Main content styles adjusted for sidebar */
+.main-content {
+    margin-left: 250px;
+    transition: all 0.3s ease;
+    width: calc(100% - 250px);
+}
+
+/* Tab content styles */
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* Responsive adjustments for sidebar */
+@media (max-width: 992px) {
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+    
+    .sidebar {
+        transform: translateX(-250px);
+    }
+    
+    .sidebar.active {
+        transform: translateX(0);
+    }
+    
+    .sidebar-toggle {
+        display: block;
+    }
+    
+    .navbar {
+        padding: 12px 20px 12px 50px;
+    }
+}
+    </style>
+    
+    <script>
+    // Toggle sidebar on mobile
+    function toggleSidebar() {
+        document.querySelector('.sidebar').classList.toggle('active');
+    }
+    
+    // Function to switch tabs
+    function switchTab(tabId) {
+        // Hide all tab contents
+        document.querySelectorAll('.tab-content').forEach(tab => {
+            tab.classList.remove('active');
+        });
+        
+        // Remove active class from all sidebar links
+        document.querySelectorAll('.sidebar-menu a').forEach(link => {
+            link.classList.remove('active');
+        });
+        
+        // Show selected tab content
+        document.getElementById(tabId).classList.add('active');
+        
+        // Add active class to selected sidebar link
+        document.querySelector(`a[data-tab="${tabId}"]`).classList.add('active');
+    }
+</script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</h:head>
+
+<h:body>
+<button class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            Programme Dashboard
+        </div>
+        <ul class="sidebar-menu">
+            <li>
+                <a href="#" class="active" data-tab="myApplications" onclick="switchTab('myApplications')">
+                    <i class="fas fa-user-graduate"></i> My Applications
+                </a>
+            </li>
+            <li>
+                <a href="#" data-tab="allApplications" onclick="switchTab('allApplications')">
+                    <i class="fas fa-users"></i> All Applications
+                </a>
+            </li>
+        </ul>
+        <div class="sidebar-footer">
+            <h:form>
+                <h:commandButton styleClass="sidebar-button sidebar-logout" value="Logout" action="#{userBean.logout}"/>
+            </h:form>
+        </div>
+    </div>
+    
+    <div class="main-content">   
+    <div id="myApplications" class="tab-content active">    
+<div class="navbar">
+    Programme Leader Dashboard
+</div>
+
+<div class="container">
+
+    <div class="section">
+        <div class="welcome-message">
+            <h:outputText value="Welcome, #{programmeLeaderController.username}"/>
+        </div>
+
+       <div class="progress-container" id="progressContainer">
+    <h:form id="progressForm">
+        <div class="progress-label">
+            <span>Admission Progress</span>
+            <h:panelGroup id="capacityIndicator" styleClass="#{programmeLeaderController.getCapacityLevelClass()}">
+                <h:outputText value="#{programmeLeaderController.getCapacityLevelText()}" escape="false"/>
+            </h:panelGroup>
+        </div>
+        
+        <div class="progress-bar-container">
+            <div class="progress-bar" style="width: #{programmeLeaderController.getProgressBarPercentage()}%;">
+            </div>
+        </div>
+        
+        <div class="progress-indicator">
+            <span class="progress-text">#{programmeLeaderController.admissionProgress}</span>
+        </div>
+        
+        <h:messages id="admissionError" globalOnly="true" layout="list" 
+                    style="color: red; font-weight: bold; margin-top: 10px; margin-bottom: 0;" />
+    </h:form>
+</div>
+
+        <!-- Main application form with ID for refresh -->
+        <h:form id="applicationsForm">
+            <h:dataTable value="#{programmeLeaderController.applications}" var="theApplication" border="1">
+                <h:column>
+                    <f:facet name="header">Student Number</f:facet>
+                    <h:outputText value="#{theApplication.applicant.studentNumber}"/>
+                </h:column>
+
+                 <h:column>
+    <f:facet name="header">Marks</f:facet>
+    
+    <div class="panel-container">
+        <!-- Download document buttons -->
+        <div class="document-actions-row">
+        <!-- Download document buttons -->
+        
+        <!-- Existing Show/Hide Marks button -->
+        <h:commandButton value="#{programmeLeaderController.isExpanded(theApplication.applicant.id) ? 'Hide Marks' : 'Show Marks'}"
+                         action="#{programmeLeaderController.toggleMarks(theApplication.applicant.id)}"
+                         styleClass="btn-toggle">
+            <f:ajax execute="@this" render="marksPanel#{theApplication.applicant.id}"/>
+        </h:commandButton>
+        <div class="document-buttons-inline">
+        <!--<div class="document-buttons">-->
+            <h:commandButton value="ID Document" 
+                             action="#{programmeLeaderController.downloadIdDocument(theApplication.id)}"
+                             styleClass="btn-download btn-download-id" >
+                
+            </h:commandButton>
+            
+            <h:commandButton value="G12 Transcript" 
+                             action="#{programmeLeaderController.downloadG12Transcript(theApplication.id)}" 
+                             styleClass="btn-download btn-download-g12" >
+            </h:commandButton>
+        </div>
+       
+        </div>
+        <!-- Existing marks panel -->
+        <h:panelGroup id="marksPanel#{theApplication.applicant.id}">
+            <h:panelGroup rendered="#{programmeLeaderController.isExpanded(theApplication.applicant.id)}"
+                          layout="block" styleClass="marks-table">
+                <h:dataTable value="#{theApplication.applicant.marks}" var="mark">
+                    <h:column>
+                        <f:facet name="header">Subject Name</f:facet>
+                        <h:outputText value="#{mark.subject.name}"/>
+                    </h:column>
+                    
+                    <h:column>
+                        <f:facet name="header">Final Mark</f:facet>
+                        <h:outputText value="#{mark.percentage}"/>
+                    </h:column>
+                </h:dataTable>
+            </h:panelGroup>
+        </h:panelGroup>
+    </div>
+</h:column>
+
+                <h:column>
+                    <f:facet name="header">APS</f:facet>
+                    <h:outputText value="#{programmeLeaderController.calculateAPS(theApplication.applicant.marks)}"/>
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Decision</f:facet>
+                    <div class="decision-buttons">
+                        <h:commandButton value="Admit" action="#{programmeLeaderController.admit(theApplication.id)}" styleClass="btn-admit">
+                            <f:ajax execute="@this" render="@form :acceptedForm :rejectedForm :waitlistForm :progressForm :allApplicationsForm" />
+                        </h:commandButton>
+                        <h:commandButton value="Reject" action="#{programmeLeaderController.reject(theApplication.id)}" styleClass="btn-reject">
+                            <f:ajax execute="@this" render="@form :acceptedForm :rejectedForm :waitlistForm :progressForm :allApplicationsForm" />
+                        </h:commandButton>
+                        <h:commandButton value="Wait List" action="#{programmeLeaderController.waitList(theApplication.id)}" styleClass="btn-waitlist">
+                            <f:ajax execute="@this" render="@form :acceptedForm :waitlistForm :rejectedForm :progressForm :allApplicationsForm" />
+                        </h:commandButton>
+                    </div>
+                </h:column>
+            </h:dataTable>
+        </h:form>
+    </div>
+    
+    <div class="section accepted-section">
+        <div class="welcome-message">
+            <h:outputText value="Accepted Students" />
+        </div>
+        
+        <h:form id="acceptedForm">
+            <h:dataTable value="#{programmeLeaderController.acceptedApplications}" var="acceptedApp" border="1">
+                <h:column>
+                    <f:facet name="header">Student Number</f:facet>
+                    <h:outputText value="#{acceptedApp.applicant.studentNumber}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Programme</f:facet>
+                    <h:outputText value="#{acceptedApp.programme.name}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Action</f:facet>
+                    <h:commandButton value="Revoke" action="#{programmeLeaderController.revoke(acceptedApp.id)}" styleClass="btn-revoke">
+                        <f:ajax execute="@this" render=":applicationsForm :acceptedForm :rejectedForm :progressForm :allApplicationsForm" />
+                    </h:commandButton>
+                </h:column>
+            </h:dataTable>
+        </h:form>
+    </div>
+    
+    <!-- New Waiting List Students Section - Add this before the rejected section -->
+<div class="waitlisted-section"> <!-- Light yellow background -->
+    <div class="welcome-message">
+        <h:outputText value="Waiting List Students" />
+    </div>
+    
+    <h:form id="waitlistForm">
+        <h:dataTable value="#{programmeLeaderController.waitlistedApplications}" var="waitlistApp" border="1">
+            <h:column>
+                <f:facet name="header">Student Number</f:facet>
+                <h:outputText value="#{waitlistApp.applicant.studentNumber}" />
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Programme</f:facet>
+                <h:outputText value="#{waitlistApp.programme.name}" />
+            </h:column>
+            
+            <h:column>
+                <f:facet name="header">APS</f:facet>
+                <h:outputText value="#{programmeLeaderController.calculateAPS(waitlistApp.applicant.marks)}" />
+            </h:column>
+
+            <h:column>
+                <f:facet name="header">Action</f:facet>
+                <div class="decision-buttons">
+                    <h:commandButton value="Admit" action="#{programmeLeaderController.admit(waitlistApp.id)}" styleClass="btn-admit">
+                        <f:ajax execute="@this" render=":applicationsForm :acceptedForm :waitlistForm :rejectedForm :progressForm :allApplicationsForm" />
+                    </h:commandButton>
+                    <h:commandButton value="Reject" action="#{programmeLeaderController.reject(waitlistApp.id)}" styleClass="btn-reject">
+                        <f:ajax execute="@this" render=":applicationsForm :acceptedForm :waitlistForm :rejectedForm :progressForm :allApplicationsForm" />
+                    </h:commandButton>
+                </div>
+            </h:column>
+        </h:dataTable>
+    </h:form>
+</div>
+    
+    <!-- New Rejected Students Section -->
+    <div class="section rejected-section">
+        <div class="welcome-message">
+            <h:outputText value="Rejected Students" />
+        </div>
+        
+        <h:form id="rejectedForm">
+            <h:dataTable value="#{programmeLeaderController.rejectedApplications}" var="rejectedApp" border="1">
+                <h:column>
+                    <f:facet name="header">Student Number</f:facet>
+                    <h:outputText value="#{rejectedApp.applicant.studentNumber}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Programme</f:facet>
+                    <h:outputText value="#{rejectedApp.programme.name}" />
+                </h:column>
+                
+                <h:column>
+                    <f:facet name="header">APS</f:facet>
+                    <h:outputText value="#{programmeLeaderController.calculateAPS(rejectedApp.applicant.marks)}" />
+                </h:column>
+
+                <h:column>
+                    <f:facet name="header">Action</f:facet>
+                    <h:commandButton value="Re-evaluate" action="#{programmeLeaderController.reEvaluate(rejectedApp.id)}" styleClass="btn-reevaluate">
+                        <f:ajax execute="@this" render=":applicationsForm :acceptedForm :rejectedForm :progressForm :allApplicationsForm" />
+                    </h:commandButton>
+                </h:column>
+            </h:dataTable>
+        </h:form>
+    </div>
+
+</div>
+</div>        
+        <div id="allApplications" class="tab-content">
+        <div class="navbar">
+        Programme Leader Dashboard
+    </div>
+    
+    <div class="container">
+        <div class="section">
+            <div class="welcome-message">
+                <h:outputText value="All Applications" />
+            </div>
+            
+            <!-- All Applications Table -->
+            <h:form id="allApplicationsForm">
+                <h:dataTable value="#{programmeLeaderController.allApplications}" var="app" border="1">
+                    <h:column>
+                        <f:facet name="header">Student Number</f:facet>
+                        <h:outputText value="#{app.applicant.studentNumber}" />
+                    </h:column>
+
+                    <h:column>
+                        <f:facet name="header">Programme</f:facet>
+                        <h:outputText value="#{app.programme.name}" />
+                    </h:column>
+                    
+                    <h:column>
+                        <f:facet name="header">Status</f:facet>
+                        <h:outputText value="#{app.applicationStatus}" />
+                    </h:column>
+                    
+                </h:dataTable>
+            </h:form>
+        </div>
+    </div>
+        </div>
+    
+</div>
+    <f:event type="preRenderView" listener="#{userBean.redirectIfNotLoggedInAsProgrammeLeader()}"  />
+    <f:event type="postRenderView" listener="#{programmeLeaderController.loadApplications()}"/>
+</h:body>
+</html>

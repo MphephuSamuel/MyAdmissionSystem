@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <title>UMP | Student Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <style>
+        :root {
+            --primary: #1d2042;
+            --accent: #f9c73d;
+            --bg: #f4f4f4;
+            --white: #ffffff;
+            --text-dark: #1d2042;
+            --text-light: #fff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            background-color: var(--bg);
+            color: var(--text-dark);
+        }
+
+        .top-bar {
+            background-color: var(--primary);
+            color: var(--accent);
+            padding: 1rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .top-bar .title-text {
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+
+        .user-info {
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        @media (min-width: 600px) {
+            .top-bar {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .user-info {
+                text-align: right;
+            }
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+        }
+
+        h3 {
+            text-align: center;
+            margin-top: 2rem;
+            color: #333;
+        }
+
+        .responsive-table {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            min-width: 600px;
+        }
+
+        th, td {
+            padding: 0.8rem;
+            text-align: left;
+            border: 1px solid #e0e0e0;
+        }
+
+        th {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .profile-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .profile-info > div {
+            flex: 1 1 48%;
+            background-color: #f9f9f9;
+            padding: 1rem;
+            border-radius: 6px;
+        }
+
+        @media (max-width: 600px) {
+            .profile-info > div {
+                flex: 1 1 100%;
+            }
+        }
+
+        .btn-logout {
+            background-color: var(--accent);
+            color: var(--text-dark);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            width: 100%;
+            margin-top: 2rem;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background-color: #ffd100;
+        }
+
+    </style>
+</h:head>
+<h:body>
+    <f:event type="preRenderView" listener="#{userBean.redirectIfNotLoggedInAsStudent}" />
+
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="title-text">University of Mpumalanga</div>
+        <div class="user-info">
+            <strong>Welcome, #{studentDashboardBean.applicant.firstName} #{studentDashboardBean.applicant.lastName}</strong><br/>
+            <small>Student No: #{studentDashboardBean.applicant.studentNumber}</small>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="section-title">Student Portal</div>
+        <p style="text-align: center;">Welcome to your dashboard. Here you will find your application status, personal info, and more.</p>
+
+        <h3>Your Applications</h3>
+        <div class="responsive-table">
+            <h:dataTable value="#{studentDashboardBean.applications}" var="app"
+                         styleClass="ui-widget ui-widget-content"
+                         headerClass="ui-widget-header"
+                         rowClasses="ui-datatable-even ui-datatable-odd"
+                         style="width: 100%;">
+                <h:column>
+                    <f:facet name="header">Programme</f:facet>
+                    #{app.programme.name}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Choice</f:facet>
+                    #{app.choiceNumber}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Status</f:facet>
+                    #{app.applicationStatus}
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Date</f:facet>
+                    <h:outputText value="#{app.applicationDate}">
+                        <f:convertDateTime pattern="yyyy-MM-dd" />
+                    </h:outputText>
+                </h:column>
+            </h:dataTable>
+        </div>
+
+        <h3>Profile Information</h3>
+        <div class="profile-info">
+            <div><strong>Full Name:</strong><br/>#{studentDashboardBean.applicant.title} #{studentDashboardBean.applicant.firstName} #{studentDashboardBean.applicant.middleName} #{studentDashboardBean.applicant.lastName}</div>
+            <div><strong>Gender:</strong><br/>#{studentDashboardBean.applicant.gender}</div>
+            <div><strong>Date of Birth:</strong><br/>
+                <h:outputText value="#{studentDashboardBean.applicant.dateOfBIrth}">
+                    <f:convertDateTime pattern="yyyy-MM-dd" />
+                </h:outputText>
+            </div>
+            <div><strong>ID Number:</strong><br/>#{studentDashboardBean.applicant.idNumber}</div>
+            <div><strong>Email:</strong><br/>#{studentDashboardBean.applicant.email}</div>
+            <div><strong>Phone:</strong><br/>#{studentDashboardBean.applicant.phoneNumber}</div>
+            <div><strong>Alternative Phone:</strong><br/>#{studentDashboardBean.applicant.alternativePhoneNumber}</div>
+            <div><strong>Home Address:</strong><br/>#{studentDashboardBean.applicant.homeAddress}</div>
+        </div>
+
+        <!-- Logout Button -->
+        <h:form>
+            <h:commandButton value="Logout" action="#{userBean.logout}" styleClass="btn-logout" />
+        </h:form>
+    </div>
+</h:body>
+</html>
+

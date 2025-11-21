@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Set Application Period</title>
+</h:head>
+<h:body>
+    <h:form>
+        <h2>Define Application Period</h2>
+
+        <p:messages />
+
+        <h:panelGrid columns="2" cellpadding="5">
+
+            <h:outputLabel value="Opening Date:" for="opening" />
+            <p:calendar id="opening" value="#{applicationPeriodBean.openingDate}" pattern="yyyy-MM-dd" />
+
+            <h:outputLabel value="Closing Date:" for="closing" />
+            <p:calendar id="closing" value="#{applicationPeriodBean.closingDate}" pattern="yyyy-MM-dd" />
+
+            <h:outputLabel value="Is Active?" />
+            <h:selectBooleanCheckbox value="#{applicationPeriodBean.active}" />
+
+        </h:panelGrid>
+
+        <br />
+        <p:commandButton value="Save Period" action="#{applicationPeriodBean.saveNewPeriod}" update="@form" />
+
+    </h:form>
+</h:body>
+</html>

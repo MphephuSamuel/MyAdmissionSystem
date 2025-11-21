@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>UMP | Application Submitted</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <style>
+        body {
+            background-color: #f4f4f4;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .top-bar {
+            background-color: #1d2042;
+            color: #f9c73d;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-sizing: border-box;
+            margin: 0;
+        }
+
+        .logo-placeholder {
+            width: 65px;
+            height: 65px;
+            background-color: #ccc;
+            border-radius: 6px;
+            margin-right: 5px;
+        }
+
+        .logo {
+            width: 65px;
+            height: 65px;
+            margin-right: 5px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .title-text {
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        .confirmation-panel {
+            max-width: 600px;
+            margin: 120px auto 60px auto; /* space below fixed header */
+            padding: 30px;
+            border-radius: 10px;
+            background-color: #ffffff;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .confirmation-message {
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .confirmation-details {
+            font-size: 16px;
+            font-weight: bold;
+            color: #1d2042;
+            margin-top: 20px;
+        }
+
+        .continue-btn {
+            background-color: #1d2042;
+            border-color: #1d2042;
+            color: white;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+    </style>
+</h:head>
+
+<h:body>
+
+    <!-- Top UMP Bar -->
+    <div class="top-bar">
+        <h:graphicImage library="images" name="new-logo-preview.png" styleClass="logo" />
+        <div class="title-text">University of Mpumalanga</div>
+    </div>
+
+    <h:form>
+        <div class="confirmation-panel">
+            <h2 style="color: #1d2042; text-align: center;">Application Submitted Successfully</h2>
+
+            <h:outputText value="Your application has been successfully submitted. A confirmation email has been sent to you."
+                          styleClass="confirmation-message" />
+
+            <h:outputText value="Please find your important details below for future reference:"
+                          styleClass="confirmation-message" />
+
+            <h:outputText value="Student Number: #{confirmBean.studentNumber}"
+                          styleClass="confirmation-details" />
+            <h:outputText value="PIN: #{confirmBean.pin}"
+                          styleClass="confirmation-details" />
+
+            <div class="btn-group">
+                <p:commandButton value="Continue"
+                                 icon="pi pi-arrow-right"
+                                 styleClass="continue-btn ui-button ui-widget ui-corner-all"
+                                 action="#{confirmBean.goToLogin}" />
+            </div>
+        </div>
+    </h:form>
+
+</h:body>
+</html>

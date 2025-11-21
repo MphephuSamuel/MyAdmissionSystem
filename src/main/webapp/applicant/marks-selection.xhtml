@@ -1,0 +1,615 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Applicant Marks Entry</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+
+    <style>
+        :root {
+            --primary-color: #1d2042;
+            --primary-light: #2a2e60;
+            --secondary-color: #3f51b5;
+            --accent-color: #ff5722;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --text-primary: #212121;
+            --text-secondary: #757575;
+            --divider-color: #eeeeee;
+            --background-light: #f8f9fa;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            background-color: #f4f7fb;
+            font-family: "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-primary);
+        }
+
+        .form-wrapper {
+            max-width: 1100px;
+            margin: 120px auto;
+            background-color: #fff;
+            padding: 0;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+        }
+
+        .form-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 30px;
+            position: relative;
+        }
+
+        .form-header h2 {
+            margin: 0;
+            font-weight: 500;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-header h2 i {
+            margin-right: 10px;
+        }
+
+        .progress-container {
+            background-color: #ffffff;
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--divider-color);
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .progress-bar:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 4px;
+            width: 100%;
+            background-color: #e0e0e0;
+            z-index: 0;
+        }
+
+        .progress-bar:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 4px;
+            width: 50%;
+            background-color: var(--primary-color);
+            z-index: 0;
+        }
+
+        .step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 2px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step.active {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #fff;
+        }
+
+        .step-label {
+            position: absolute;
+            top: 40px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            width: 100px;
+            text-align: center;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .step.active .step-label {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .form-content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .section-title {
+            background-color: var(--background-light);
+            padding: 12px 15px;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+
+        .form-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .form-row .label-field {
+            width: 180px;
+            font-weight: 600;
+            font-size: 15px;
+            text-align: left;
+            padding-right: 25px;
+            color: var(--text-primary);
+        }
+
+        .form-row .input-field {
+            flex: 1;
+        }
+
+        .ui-inputfield, .ui-selectonemenu {
+            width: 100% !important;
+            padding: 10px !important;
+            border-radius: 6px !important;
+            border: 1px solid #ddd !important;
+            transition: border-color 0.3s, box-shadow 0.3s !important;
+        }
+
+        .ui-inputfield:focus, .ui-selectonemenu:focus {
+            border-color: var(--primary-color) !important;
+            box-shadow: 0 0 0 2px rgba(29, 32, 66, 0.2) !important;
+        }
+
+        .ui-state-disabled {
+            opacity: 0.8 !important;
+            background-color: #f5f5f5 !important;
+           
+        }
+
+        .locked-field {
+            position: relative;
+        }
+
+        .info-text {
+            color: var(--text-secondary);
+            font-size: 13px;
+            margin-top: 6px;
+            font-style: italic;
+        }
+
+        .add-btn {
+            background-color: var(--success-color) !important;
+            color: white !important;
+            border: none !important;
+            padding: 12px 20px !important;
+            border-radius: 30px !important;
+            font-weight: 500 !important;
+            transition: background-color 0.3s, transform 0.2s !important;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .add-btn:hover {
+            background-color: #3d8b40 !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .data-table {
+            margin-top: 30px;
+        }
+
+        .ui-datatable {
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .ui-datatable thead th {
+            background-color: var(--primary-color) !important;
+            color: white !important;
+            padding: 12px !important;
+            font-weight: 500 !important;
+        }
+
+        .ui-datatable tbody td {
+            padding: 12px !important;
+            border-color: var(--divider-color) !important;
+        }
+
+        .ui-datatable .ui-paginator {
+            background-color: var(--background-light) !important;
+            padding: 10px !important;
+        }
+
+        .remove-button {
+            color: white !important;
+            background-color: var(--error-color) !important;
+            font-size: 12px !important;
+            font-weight: bold !important;
+            border: none !important;
+            padding: 4px 10px !important;
+            cursor: pointer !important;
+            border-radius: 4px !important;
+            transition: background-color 0.3s !important;
+        }
+
+        .remove-button:hover {
+            background-color: #d32f2f !important;
+            text-decoration: none !important;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding: 20px 0;
+            border-top: 1px solid var(--divider-color);
+        }
+
+        .ui-button {
+            width: 48%;
+            border-radius: 30px !important;
+            padding: 12px 20px !important;
+            font-weight: 500 !important;
+            transition: background-color 0.3s, transform 0.2s !important;
+        }
+
+        .ui-button.primary {
+            background-color: var(--primary-color) !important;
+            color: white !important;
+            border: none !important;
+        }
+
+        .ui-button.secondary {
+            background-color: #3949ab !important;
+            color: white !important;
+            border: none !important;
+        }
+
+        .ui-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .ui-button.secondary:hover {
+            background-color: #303f9f !important;
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-weight: bold;
+            margin-top: 10px;
+            background-color: rgba(244, 67, 54, 0.1);
+            padding: 10px;
+            border-radius: 4px;
+            border-left: 4px solid var(--error-color);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .form-wrapper {
+                margin: 15px;
+                margin-top: 110px;
+                border-radius: 8px;
+            }
+            
+            .form-content {
+                padding: 15px;
+            }
+            
+            .button-group {
+                padding: 15px 0;
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .ui-button {
+                width: 100%;
+            }
+
+            .step-label {
+                display: none;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .form-row .label-field {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+        }
+        .top-bar {
+                background-color: #1d2042;
+                color: #f9c73d;
+                padding: 15px 30px;
+                display: flex;
+                align-items: center;
+            }
+
+            .bar-title {
+                font-size: 1.4rem;
+                font-weight: bold;
+            }
+            
+            .ui-message {
+    display: block;
+    margin-top: 5px;
+    color: var(--error-color);
+    font-size: 12px;
+}
+
+.ui-message-error {
+    color: var(--error-color);
+}
+
+.ui-state-error, .ui-widget-content .ui-state-error {
+    border-color: var(--error-color) !important;
+}
+
+/* Highlight required fields that are empty */
+.required-field-label:after {
+    content: " *";
+    color: var(--error-color);
+}
+ 
+        .top-bar {
+            background-color: #1d2042;
+            color: #f9c73d;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            position: absolute;
+            top: 0;
+        }
+
+        .logo-placeholder {
+            width: 50px;
+            height: 50px;
+            background-color: #ccc;
+            border-radius: 6px;
+            margin-right: 15px;
+        }
+
+        .bar-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        .logo {
+            width: 65px;
+            height: 65px;
+            margin-right: 5px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{applicantMarksBean.loadMarks}" />
+    </f:metadata>
+<!-- Top UMP Bar -->
+    <div class="top-bar">
+        <h:graphicImage library="images" name="new-logo-preview.png" styleClass="logo" />
+        <div class="bar-title">University of Mpumalanga</div>
+    </div>
+    <h:form id="marksForm">
+        <div class="form-wrapper">
+            <div class="form-header">
+                <h2><i class="fas fa-graduation-cap"></i> Applicant Marks Entry</h2>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="step active">
+                        1
+                        <div class="step-label">Personal Details</div>
+                    </div>
+                    <div class="step active">
+                        2
+                        <div class="step-label">Next of Kin</div>
+                    </div>
+                    <div class="step active">
+                        3
+                        <div class="step-label">Education</div>
+                    </div>
+                    <div class="step">
+                        4
+                        <div class="step-label">Review</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-content">
+                <div class="section">
+                    <div class="section-title">
+                        <i class="fas fa-book"></i> Subject Information
+                    </div>
+                    
+                    <!-- Form Row structure (Label LEFT, Input RIGHT) -->
+                    <div class="form-row">
+                        <h:outputLabel for="subject" value="Subject:" styleClass="label-field required-field-label"  />
+                        <div class="input-field">
+                            <p:selectOneMenu id="subject" value="#{applicantMarksBean.subjectId}">
+                                <f:selectItem itemLabel="Select Subject" itemValue="" />
+                                <f:selectItems value="#{applicantMarksBean.allSubjects}" var="subject" itemLabel="#{subject.name}" itemValue="#{subject.id}" />
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <h:outputLabel for="examYear" value="Exam Year:" styleClass="label-field required-field-label"  />
+                        <div class="input-field #{applicantMarksBean.firstMarkAdded ? 'locked-field' : ''}">
+                            <p:selectOneMenu id="examYear" value="#{applicantMarksBean.examYear}" disabled="#{applicantMarksBean.firstMarkAdded}">
+                                <f:selectItem itemLabel="Select Exam Year" itemValue="" />
+                                <!-- Adding the years from 2005 to 2025 -->
+                                <f:selectItems value="#{[2025,2024,2023,2022,2021,2020,2019,2018,2017,2016,2015,2014,2013,2012,2011,2010,2009,2008,2007,2006,2005]}" />
+                            </p:selectOneMenu>
+                            <h:panelGroup styleClass="info-text" rendered="#{applicantMarksBean.firstMarkAdded}">
+                                <i class="fas fa-info-circle"></i> Value locked for consistency across all subjects
+                            </h:panelGroup>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <h:outputLabel for="finalMark" value="Final Mark (%):" styleClass="label-field required-field-label"  />
+                        <div class="input-field">
+                            <p:selectOneMenu id="finalMark" value="#{applicantMarksBean.percentage}">
+                                <f:selectItem itemLabel="Select Final Mark" itemValue="" />
+                                <!-- Final Mark options will be dynamically populated -->
+                                <f:selectItems value="#{[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100]}" />
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <h:outputLabel for="subjectLevel" value="Subject Level:" styleClass="label-field required-field-label"  />
+                        <div class="input-field">
+                            <p:selectOneMenu id="subjectLevel" value="#{applicantMarksBean.level}">
+                                <f:selectItem itemLabel="Select Level" itemValue="" />
+                                <f:selectItems value="#{[1, 2, 3, 4, 5, 6, 7]}" />
+                            </p:selectOneMenu>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <h:outputLabel for="gradeLevel" value="Grade Level:" styleClass="label-field required-field-label"  />
+                        <div class="input-field #{applicantMarksBean.firstMarkAdded ? 'locked-field' : ''}">
+                            <p:selectOneMenu id="gradeLevel" value="#{applicantMarksBean.gradeLevel}" disabled="#{applicantMarksBean.firstMarkAdded}">
+                                <f:selectItem itemLabel="Select Grade Level" itemValue="" />
+                                <f:selectItem itemLabel="Grade 11" itemValue="11" />
+                                <f:selectItem itemLabel="Grade 12" itemValue="12" />
+                            </p:selectOneMenu>
+                            <h:panelGroup styleClass="info-text" rendered="#{applicantMarksBean.firstMarkAdded}">
+                                <i class="fas fa-info-circle"></i> Value locked for consistency across all subjects
+                            </h:panelGroup>
+                        </div>
+                    </div>
+
+                    <!-- Add Button -->
+                    <p:commandButton id="btnAddMark" 
+                value="Add to Marks"
+                action="#{applicantMarksBean.addMark}"
+                update=":marksForm:marksTable :marksForm:examYear :marksForm:gradeLevel :marksForm:messages :marksForm:subject :marksForm:finalMark :marksForm:subjectLevel"
+                styleClass="add-btn" 
+                icon="fas fa-plus-circle"
+                ajax="true"/>
+
+                    
+                    <h:messages for="btnAddMark" globalOnly="false" />
+                    <h:messages id="messages" globalOnly="false" styleClass="error-message" />
+                </div>
+                
+                <div class="section">
+                    <div class="section-title">
+                        <i class="fas fa-list-alt"></i> Subject Marks List
+                    </div>
+                    
+                    <!-- Marks Table -->
+                    <p:dataTable value="#{applicantMarksBean.markList}" var="mark" id="marksTable"
+                                styleClass="data-table"
+                                paginator="true" rows="7" stripedRows="true"
+                                paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                currentPageReportTemplate="{startRecord}-{endRecord} of {totalRecords} records">
+
+                        <p:column headerText="Subject">
+                            <h:outputText value="#{applicantMarksBean.getSubjectName(mark.subjectId)}" />
+                        </p:column>
+                        <p:column headerText="Exam Year">
+                            <h:outputText value="#{mark.examYear}" />
+                        </p:column>
+                        <p:column headerText="Final Mark (%)">
+                            <h:outputText value="#{mark.finalMark}" />
+                        </p:column>
+                        <p:column headerText="Subject Level">
+                            <h:outputText value="#{mark.subjectLevel}" />
+                        </p:column>
+                        <p:column headerText="Grade Level">
+                            <h:outputText value="#{mark.gradeLevel}" />
+                        </p:column>
+                        <!-- Remove Column -->
+                        <p:column headerText="Action" style="width:80px;text-align:center">
+                            <p:commandButton value="Remove" 
+                                            icon="fas fa-trash"
+                                            action="#{applicantMarksBean.removeMark(mark.subjectId)}" 
+                                            update=":marksForm:marksTable :marksForm:examYear :marksForm:gradeLevel" 
+                                            styleClass="remove-button" />
+                        </p:column>
+                    </p:dataTable>
+                </div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="form-content">
+                <div class="button-group">
+                    <p:commandButton value="Back"
+                                    action="next-of-kin.xhtml?faces-redirect=true"
+                                    styleClass="ui-button secondary"
+                                    icon="fas fa-arrow-left" />
+
+                    <p:commandButton value="Save and Continue"
+                                    action="#{applicantMarksBean.saveAndContinue}"
+                                    styleClass="ui-button primary"
+                                    ajax="false"
+                                    update=":marksForm:marksTable :marksForm:messages"
+                                    icon="fas fa-arrow-right" />
+                </div>
+            </div>
+        </div>
+    </h:form>
+
+    <!-- JavaScript for enhanced interactions -->
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Animation for form sections on page load
+            $(".section").each(function(i) {
+                $(this).delay(100 * i).animate({
+                    opacity: 1
+                }, 500);
+            });
+        });
+        
+        
+    </script>
+</h:body>
+</html>

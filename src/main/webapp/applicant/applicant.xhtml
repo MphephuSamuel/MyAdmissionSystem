@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <title>Applicant Page | University of Mpumalanga</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            color: #1d2042;
+        }
+
+        .panel {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            margin-top: 120px;
+            
+        }
+
+        .ui-panelgrid td {
+            padding: 10px;
+        }
+
+        .button {
+            background-color: #1d2042;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #1d2042;
+            color: white;
+        }
+        .top-bar {
+            background-color: #1d2042;
+            color: #f9c73d;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            position: fixed; /* fixed header */
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-placeholder {
+            width: 50px;
+            height: 50px;
+            background-color: #ccc;
+            border-radius: 6px;
+            margin-right: 15px;
+        }
+
+        .bar-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        .main-content {
+            max-width: 1000px;
+            margin: 15px;
+            margin-top: 120px; /* space below fixed header */
+        }
+        
+        .logo {
+            width: 65px;
+            height: 65px;
+            margin-right: 5px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    </style>
+</h:head>
+
+<h:body> 
+    <!-- Top UMP Bar -->
+    <div class="top-bar">
+        <h:graphicImage library="images" name="new-logo-preview.png" styleClass="logo" />
+        <div class="bar-title">University of Mpumalanga</div>
+    </div>
+    <div class="panel">
+        <h2>Applicant Section</h2>
+        <h:form>
+            <h:panelGrid columns="2">
+                <h:outputLabel for="idNumber" value="ID Number"/>
+                <h:inputText id="idNumber" value="#{applicantController.idNumber}"/>
+
+                <h:outputLabel for="email" value="Email Address"/>
+                <h:inputText id="email" value="#{applicantController.email}">
+                    <f:validateRegex pattern="^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$" />
+                </h:inputText>
+
+                <h:outputLabel for="title" value="Title"/>
+                <h:inputText id="title" value="#{applicantController.title}"/>
+
+                <h:outputLabel for="dateOfBirth" value="Date of Birth"/>
+                <h:inputText id="dateOfBirth" value="#{applicantController.dateOfBirth}">
+                    <f:convertDateTime pattern="yyyy/MM/dd" />
+                </h:inputText>
+
+                <h:outputLabel for="firstName" value="First Name"/>
+                <h:inputText id="firstName" value="#{applicantController.firstName}"/>
+
+                <h:outputLabel for="middleName" value="Middle Name"/>
+                <h:inputText id="middleName" value="#{applicantController.middleName}"/>
+
+                <h:outputLabel for="lastName" value="Last Name"/>
+                <h:inputText id="lastName" value="#{applicantController.lastName}"/>
+
+                <h:outputLabel for="gender" value="Gender"/>
+                <h:inputText id="gender" value="#{applicantController.gender}"/>
+
+                <h:outputLabel for="phoneNumber" value="Phone Number"/>
+                <h:inputText id="phoneNumber" value="#{applicantController.phoneNumber}"/>
+
+                <h:outputLabel for="alternativePhoneNumber" value="Alternative Phone Number"/>
+                <h:inputText id="alternativePhoneNumber" value="#{applicantController.alternativePhoneNumber}"/>
+
+                <h:outputLabel for="disability" value="Disability"/>
+                <h:inputText id="disability" value="#{applicantController.disability}"/>
+
+                <h:outputLabel for="homeAddress" value="Home Address"/>
+                <h:inputText id="homeAddress" value="#{applicantController.homeAddress}"/>
+
+                <h:outputLabel for="postalAddress" value="Postal Address"/>
+                <h:inputText id="postalAddress" value="#{applicantController.postalAddress}"/>
+
+                <h:outputLabel for="homeLanguage" value="Home Language"/>
+                <h:inputText id="homeLanguage" value="#{applicantController.homeLanguage}"/>
+
+                <h:outputLabel for="alternativeLanguage" value="Alternative Language"/>
+                <h:inputText id="alternativeLanguage" value="#{applicantController.alternativeLanguage}"/>
+
+                <h:outputLabel for="marriageStatus" value="Marriage Status"/>
+                <h:inputText id="marriageStatus" value="#{applicantController.marriageStatus}"/>
+            </h:panelGrid>
+            <h:commandButton value="Save" action="#{applicantController.saveApplicant}" styleClass="button"/>
+        </h:form>
+    </div>
+
+    <div class="panel">
+        <h2>Programme Selection</h2>
+        <h:form>
+            <h:outputLabel for="programme" value="Programme" />
+            <h:selectOneMenu id="programme" value="#{applicationController.programmeId}">
+                <f:selectItem itemLabel="Select Programme" itemValue="" />
+                <f:selectItems value="#{applicationController.programmes}" var="programme"
+                               itemLabel="#{programme.name}" itemValue="#{programme.id}" />
+            </h:selectOneMenu>
+            <br/><br/>
+            <h:commandButton value="Add Programme" action="#{applicationController.selectProgrammeChoice}" styleClass="button"/>
+        </h:form>
+
+        <h:form>
+            <h:commandButton value="Save Programme" action="#{applicationController.saveProgrammeChoices}" styleClass="button"/>
+        </h:form>
+
+        <h2>Selected Programmes</h2>
+        <h:dataTable value="#{applicationController.chosenApplications}" var="theApplication">
+            <h:column>
+                <f:facet name="header">Choice Number</f:facet>
+                <h:outputText value="#{theApplication.choiceNumber}"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header">Program Name</f:facet>
+                <h:outputText value="#{theApplication.programme.name}"/>
+            </h:column>
+        </h:dataTable>
+    </div>
+
+    <h:link value="Go Home" outcome="index"/>
+</h:body>
+</html>

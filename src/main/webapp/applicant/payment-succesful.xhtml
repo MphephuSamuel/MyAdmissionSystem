@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>UMP | Payment Successful</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+    <style>
+        body {
+            background-color: #f4f4f4;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0; 
+            padding: 0;
+        }
+
+        .top-bar {
+            background-color: #1d2042;
+            color: #f9c73d;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            margin: 0; /* Remove any margin around the top bar */
+            position: relative; /* Ensure it stays at the top */
+            width: 100%; /* Ensure the top bar spans the entire width */
+            box-sizing: border-box;
+        }
+
+        .logo-placeholder {
+            width: 50px;
+            height: 50px;
+            background-color: #ccc;
+            border-radius: 6px;
+            margin-right: 15px;
+        }
+
+        .title-text {
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        .confirmation-panel {
+            max-width: 600px;
+            margin: 60px auto;
+            padding: 30px;
+            border-radius: 10px;
+            background-color: #ffffff;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .confirmation-message {
+            font-size: 16px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .continue-btn {
+            background-color: #1d2042;
+            border-color: #1d2042;
+            color: white;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+        .logo {
+            width: 65px;
+            height: 65px;
+            margin-right: 5px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    </style>
+</h:head>
+
+<h:body>
+
+   <!-- Top UMP Bar -->
+    <div class="top-bar">
+        <h:graphicImage library="images" name="new-logo-preview.png" styleClass="logo" />
+        <div class="title-text">University of Mpumalanga</div>
+    </div>
+
+    <h:form>
+        <div class="confirmation-panel">
+            <h2 style="color: #1d2042; text-align: center;">Payment Successful</h2>
+
+            <h:outputText value="Your payment was successful. Thank you!"
+                          styleClass="confirmation-message" />
+
+            <h:outputText value="You may now continue to the next step of the application process."
+                          styleClass="confirmation-message" />
+
+            <div class="btn-group">
+                <p:commandButton value="Continue"
+                                 icon="pi pi-arrow-right"
+                                 styleClass="continue-btn ui-button ui-widget ui-corner-all"
+                                 action="#{paymentBean.goToConfirmInfo}" />
+            </div>
+        </div>
+    </h:form>
+
+</h:body>
+</html>

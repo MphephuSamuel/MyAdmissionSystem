@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <title>Signup | UMP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .top-bar {
+            background-color: #1d2042;
+            color: #f9c73d;
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            position: absolute;
+            top: 0;
+        }
+
+        .logo-placeholder {
+            width: 50px;
+            height: 50px;
+            background-color: #ccc;
+            border-radius: 6px;
+            margin-right: 15px;
+        }
+
+        .bar-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+
+        .signup-box {
+            background-color: #fff;
+            padding: 2rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            width: 100%;
+            max-width: 450px;
+            margin-top: 100px;
+        }
+
+        .signup-box h2 {
+            margin-bottom: 1.5rem;
+            color: #1d2042;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 0.5rem;
+            box-sizing: border-box;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .btn {
+            background-color: #1d2042;
+            color: white;
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            background-color: #14162c;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .link {
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .link a {
+            color: #1d2042;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 100vw;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(4px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.5s ease;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #ccc;
+            border-top: 5px solid #f9c73d;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media screen and (max-width: 500px) {
+            .signup-box {
+                padding: 1.5rem;
+                margin-top: 80px;
+            }
+
+            .top-bar {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .bar-title {
+                font-size: 1.1rem;
+                margin-top: 0.5rem;
+            }
+        }
+        
+        .back-button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: #001f3f; /* Navy */
+            color: gold;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            z-index: 1001;
+        }
+
+        .back-button:hover {
+            background-color: #003366;
+        }
+    </style>
+</h:head>
+
+<h:body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="logo-placeholder"></div>
+        <div class="bar-title">University of Mpumalanga</div>
+    </div>
+
+    <!-- Signup Form -->
+    <div class="signup-box">
+        <h2>Signup Page</h2>
+
+        <h:panelGroup rendered="#{not empty param['error']}">
+            <div class="error-message">Invalid credentials</div>
+        </h:panelGroup>
+
+        <h:form onsubmit="showOverlay()">
+            <h:selectOneRadio value="#{loginRouter.selectedRole}"  style="display: none">
+                <f:selectItem itemLabel="Admin" itemValue="admin" />
+                <f:ajax render="dynamicFields"/>
+            </h:selectOneRadio>
+
+            <br/>
+
+            <h:panelGroup id="dynamicFields" layout="block">
+
+                <!-- Admin -->
+                <h:panelGroup rendered="#{loginRouter.selectedRole eq 'admin'}">
+                    <div class="form-group">
+                        <h:outputLabel for="adminUsername" value="Staff ID:"/>
+                        <h:inputText id="adminUsername" value="#{userBean.username}" required="true"/>
+                    </div>
+                    <div class="form-group">
+                        <h:outputLabel for="adminPassword" value="PIN:"/>
+                        <h:inputSecret id="adminPassword" value="#{userBean.password}" required="true"/>
+                    </div>
+                    <h:commandButton value="Sign Up" action="#{userBean.signup}" styleClass="btn"/>
+                </h:panelGroup>
+
+            </h:panelGroup>
+        </h:form>
+
+        <div class="link">
+            Already have an account? <h:link value="Login here" outcome="login.xhtml"/>
+        </div>
+    </div>
+
+    <a href="login.xhtml" class="back-button">← Back</a>
+    
+    <!-- Fullscreen Overlay Spinner -->
+    <div id="overlay" class="overlay hidden">
+        <div class="spinner"></div>
+    </div>
+</h:body>
+</html>

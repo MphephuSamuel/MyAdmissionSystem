@@ -1,0 +1,756 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Admin - Admission System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <style>
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f0f4f8;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+        display: flex;
+    }
+
+
+.sidebar {
+    width: 250px;
+    height: 100vh;
+    background-color: #003366;
+    color: white;
+    padding: 15px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.1);
+    z-index: 1300;
+}
+
+.sidebar h3 {
+    font-size: 20px;
+    margin-top: 0;
+    color: #f0f4f8;
+}
+
+.sidebar a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    margin: 10px 0;
+    font-weight: bold;
+    border-radius: 8px;
+    transition: background-color 0.3s;
+}
+
+.sidebar a:hover {
+    background-color: #002244;
+}
+
+.content {
+    margin-left: 270px;
+    width: calc(100% - 270px);
+    padding: 20px;
+    
+}
+#createProgrammeSection {
+transform: none !important; /* Disable any scaling on this specific section */
+}
+
+.form-section {
+    background-color: #ffffff;
+    padding: 25px 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    margin-bottom: 40px;
+    display: none;
+}
+
+.form-section.active {
+    display: block;
+}
+
+h2, h3 {
+    color: #002244;
+    border-bottom: 2px solid #90caf9;
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+}
+
+h:form {
+    margin-bottom: 40px;
+}
+
+/* Keeping the existing styling for forms, buttons, and other elements */
+.programme-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.programme-card {
+    background-color: #ffffff;
+    padding: 25px 30px;
+    border-radius: 16px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease-in-out;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.programme-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+}
+
+.programme-title {
+    font-size: 22px;
+    font-weight: bold;
+    color: #002244;
+    margin-bottom: 10px;
+}
+
+.programme-aps {
+    font-size: 16px;
+    color: #444;
+    margin-bottom: 10px;
+}
+
+.subject-header {
+    font-weight: bold;
+    margin-top: 20px;
+    color: #003366;
+}
+
+.subject-table, .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.subject-table th, .subject-table td,
+.data-table th, .data-table td {
+    border: 1px solid #ccc;
+    padding: 12px;
+    text-align: left;
+    background-color: #fdfdfd;
+    font-size: 14px;
+}
+
+.subject-table th, .data-table th {
+    background-color: #e3f2fd;
+    font-weight: bold;
+    color: #002244;
+}
+
+/* Styling for form inputs */
+input[type="text"], input[type="password"], select {
+    padding: 12px 16px;
+    font-size: 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #f9f9f9;
+    color: #333;
+    transition: border-color 0.3s ease-in-out;
+}
+
+input[type="text"]:focus, input[type="password"]:focus, select:focus {
+    border-color: #003366;
+    outline: none;
+    background-color: #ffffff;
+}
+
+/* Button styling */
+h:commandButton, button {
+    padding: 12px 24px;
+    font-size: 14px;
+    background-color: #003366;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 12px rgba(0, 51, 102, 0.3);
+}
+
+h:commandButton:hover {
+    background-color: #001f3f;
+    transform: translateY(-2px);
+}
+
+h:commandButton:active {
+    transform: scale(0.98);
+}
+
+.fancy-button {
+    padding: 12px 24px;
+    font-size: 15px;
+    background: linear-gradient(135deg, #003366, #001f3f);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-top: 15px;
+    box-shadow: 0 4px 12px rgba(0, 31, 63, 0.4);
+    transition: all 0.3s ease;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+.fancy-button:hover {
+    background: linear-gradient(135deg, #001f3f, #000c1a);
+    transform: translateY(-2px);
+}
+
+.fancy-button:active {
+    transform: scale(0.97);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(4px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: opacity 0.5s ease;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #ccc;
+    border-top: 5px solid #f9c73d;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.overlay.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.content.blur {
+    filter: blur(4px);
+    pointer-events: none; 
+    user-select: none;
+}
+
+.sidebar-toggle {
+    display: none;
+    position: absolute; 
+    top: 10px;
+    left: 20px;
+    z-index: 1200; 
+    cursor: pointer;
+    background-color: #003366;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+     color: white; /* Add this line to make the icon white */
+    font-size: 1.5em; /* Optional: makes the icon slightly larger */
+    border: 1px solid white;
+}
+
+.mobile-header {
+    display: none;
+    align-items: center;
+    background-color: #003366;
+    padding: 10px;
+}
+
+/* Sidebar responsive behavior */
+@media (max-width: 768px) {
+    .sidebar {
+        padding-top: 70px;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 220px;
+        background-color: #003366;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+        z-index: 1100; 
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+        z-index: 1150;
+    }
+
+    .content {
+        margin-left: 0;
+        padding: 80px 20px 20px;
+        width: 100%;
+        transition: padding-left 0.3s ease-in-out;
+        transition: filter 0.3s ease-in-out;
+    }
+
+    body {
+        padding: 0;
+        flex-direction: column;
+    }
+
+    .sidebar a {
+        margin: 8px 0;
+        padding: 10px 15px;
+    }
+
+    .sidebar.open .sidebar-toggle {
+        display: none; 
+    }
+
+    .sidebar-backdrop {
+        z-index: 1050;
+    }
+
+    .mobile-header {
+        display: flex;
+    }
+
+    .sidebar-toggle {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+        z-index: 1200;
+    }
+
+
+}
+
+
+</style> 
+    <script>
+        function showOverlay() {
+            document.getElementById("overlay").classList.remove("hidden");
+        }
+    </script>
+
+<script>
+    //<![CDATA[
+    function toggleSidebar() {
+        const sidebar = document.querySelector('.sidebar');
+        const content = document.querySelector('.content');
+        const sidebarToggle = document.querySelector('.sidebar-toggle');
+        const isOpen = sidebar.classList.toggle('open');
+
+        if (isOpen) {
+          content.classList.add('blur');
+          sidebarToggle.style.display = 'none';
+        } else {
+          content.classList.remove('blur');
+          sidebarToggle.style.display = 'block';
+        }
+    }
+
+    function closeSidebar() {
+        document.querySelector('.sidebar').classList.remove('open');
+        document.querySelector('.content').classList.remove('blur');
+        document.querySelector('.sidebar-toggle').style.display = 'block';
+        if (window.innerWidth <= 768) {
+        document.querySelector('.sidebar-toggle').style.display = 'block';
+    }
+    }
+
+
+
+    document.addEventListener('click', function(event) {
+        const sidebar = document.querySelector('.sidebar');
+        const sidebarToggle = document.querySelector('.sidebar-toggle');
+        const isClickInsideSidebar = sidebar.contains(event.target);
+        const isClickOnToggle = sidebarToggle.contains(event.target);
+
+        if (!isClickInsideSidebar && !isClickOnToggle && sidebar.classList.contains('open')) {
+          closeSidebar();
+        }
+    });
+    //]]>
+</script>
+
+<script>
+    // Track the number of subjects added
+    
+
+    function showSection(sectionId) {
+        // Hide all sections
+        const sections = document.querySelectorAll('.form-section');
+        sections.forEach(section => section.classList.remove('active'));
+
+        // Show the clicked section
+        const activeSection = document.getElementById(sectionId);
+        activeSection.classList.add('active');
+
+        // Close the sidebar after clicking a sidebar item
+        closeSidebar();
+    }
+
+</script>
+
+<script>
+function lockProgrammeFields() {
+    // Get the form fields
+    const nameField = document.getElementById('programmeForm:programmeName');
+    const apsField = document.getElementById('programmeForm:minAps');
+    const capacityField = document.getElementById('programmeForm:maxCapacity');
+    
+    // Make fields read-only
+    nameField.readOnly = true;
+    apsField.readOnly = true; 
+    capacityField.readOnly = true;
+    
+    // Add visual indication
+    nameField.style.backgroundColor = "#f0f0f0";
+    apsField.style.backgroundColor = "#f0f0f0";
+    capacityField.style.backgroundColor = "#f0f0f0";
+}
+
+// Check on page load if any subjects exist
+document.addEventListener('DOMContentLoaded', function() {
+    const subjectTable = document.querySelector('[id$=":allSubjectRequirementsAndLevel"]');
+    if (subjectTable) {
+        const rows = subjectTable.querySelectorAll('tbody tr');
+        if (rows.length > 0) {
+            lockProgrammeFields();
+        }
+    }
+});
+</script>
+</h:head>
+  <h:body>
+
+
+<div class="sidebar">
+  <h3>Admin Panel</h3>
+  <a href="javascript:void(0);" onclick="showSection('createProgrammeSection')">Create Programme</a>
+  <a href="javascript:void(0);" onclick="showSection('allProgrammesSection')">All Programmes</a>
+  <a href="javascript:void(0);" onclick="showSection('subjectSection')">Subject Section</a>
+  <a href="javascript:void(0);" onclick="showSection('programmeLeaderSection')">Programme Leaders Section</a>
+  <a href="javascript:void(0);" onclick="showSection('applicationPeriodSection')">Application Period Section</a>
+  <a href="javascript:void(0);" onclick="showSection('allApplicationsSections')">All Applications</a>
+  <h:form style="margin-top: 20px;">
+        <h:commandButton value="Logout" action="#{userBean.logout}" 
+style="background-color: #dc3545; color: white; padding: 0.5rem 1rem; border-radius: 5px; cursor: pointer; margin-top: 20px;" />
+
+</h:form>
+</div>
+<div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebar()"></div>
+
+<div class="content">
+<button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+  <div id="createProgrammeSection" class="form-section active">
+    <h2>Create Programme</h2>
+    <h:form id="programmeForm" onsubmit="showOverlay()">
+        <h:messages layout="table" style="color:red;" />
+<h:panelGrid columns="2" columnClasses="labelCol,inputCol" style="  margin-left:0px">
+
+
+<h:panelGrid columns="2" columnClasses="labelCol,inputCol" style="margin-left:0px;">
+
+    <!-- Programme Name -->
+    <h:outputLabel for="programmeName" value="Programme Name:" /><br/>
+    <h:inputText id="programmeName" value="#{programmeController.name}" 
+                 readonly="#{programmeController.subjectsAdded}"
+                 style="background-color: #{programmeController.subjectsAdded ? '#f0f0f0' : 'white'}" />
+
+    <!-- Minimum APS -->
+    <h:outputLabel for="minAps" value="Minimum APS:" /><br/>
+    <h:inputText id="minAps" value="#{programmeController.minAps}"
+             readonly="#{programmeController.subjectsAdded}"
+             style="background-color: #{programmeController.subjectsAdded ? '#f0f0f0' : 'white'}" />
+
+    <!-- Maximum Capacity -->
+    <h:outputLabel for="maxCapacity" value="Maximum Capacity:" /><br/>
+    <h:inputText id="maxCapacity" value="#{programmeController.maxCapacity}"
+             readonly="#{programmeController.subjectsAdded}"
+             style="background-color: #{programmeController.subjectsAdded ? '#f0f0f0' : 'white'}" />
+
+</h:panelGrid>
+
+<h:outputText value="" />
+<h:outputLabel style="margin-top: 20px; vertical-align: top;" />
+
+<!-- Required Subjects -->
+<h:outputLabel value="Required Subjects:" style="vertical-align: top;" />
+<h:panelGrid columns="2" columnClasses="labelCol,inputCol" style="margin-bottom: 10px; width: 100%;">
+  <h:outputLabel for="subjectAdd" value="Subject" />
+  <h:selectOneMenu id="subjectAdd" value="#{programmeController.selectedSubjectId}">
+    <f:selectItem itemLabel="Select Subject" itemValue="" />
+    <f:selectItems value="#{programmeController.allSubjects}" var="subject"
+                   itemLabel="#{subject.name}" itemValue="#{subject.id}" />
+  </h:selectOneMenu>
+
+  <h:outputLabel for="minLevelAdd" value="Min Level" />
+  <h:selectOneMenu id="minLevelAdd" value="#{programmeController.selectedSubjectMinLevel}">
+    <f:selectItem itemLabel="Select Level" itemValue="" />
+    <f:selectItem itemLabel="1" itemValue="1" />
+    <f:selectItem itemLabel="2" itemValue="2" />
+    <f:selectItem itemLabel="3" itemValue="3" />
+    <f:selectItem itemLabel="4" itemValue="4" />
+    <f:selectItem itemLabel="5" itemValue="5" />
+    <f:selectItem itemLabel="6" itemValue="6" />
+    <f:selectItem itemLabel="7" itemValue="7" />
+  </h:selectOneMenu>
+</h:panelGrid>
+
+<!-- Validation Error Message -->
+<h:outputLabel />
+
+<!-- Add Subject Button with JS Validation -->
+<h:outputLabel />
+<h:commandButton value="Add Subject"
+                 action="#{programmeController.addSubject}"
+                 styleClass="fancy-button">
+    <f:ajax execute="@form" render="@form" />
+</h:commandButton>
+
+<h:outputText id="subjectErrorMsg" style="color: red; display: none; margin-left:200px " value="Fill in missing fields." />
+
+</h:panelGrid>
+
+  <!-- Selected Subjects Table -->
+
+<h:outputLabel value="Selected Required Subjects and their level:" />
+<h:dataTable value="#{programmeController.allSubjectRequirementsAndLevel}"
+var="subjectRequirement" border="1" styleClass="data-table">
+<h:column>
+<f:facet name="header">Subject Name</f:facet>
+<h:outputText value="#{subjectRequirement.name}" />
+</h:column>
+<h:column>
+<f:facet name="header">Subject Minimum Level</f:facet>
+<h:outputText value="#{subjectRequirement.requiredLevel}" />
+</h:column>
+</h:dataTable>
+
+  <!-- Save Programme -->
+
+<h:commandButton value="Save Programme"
+action="#{programmeController.saveProgramme}"
+styleClass="fancy-button" />
+</h:form>
+
+<!-- JavaScript Validation -->
+
+<script>
+  function validateAllFields() {
+    const subject = document.getElementById('programmeForm:subjectAdd');
+    const level = document.getElementById('programmeForm:minLevelAdd');
+    const name = document.getElementById('programmeForm:programmeName');
+    const aps = document.getElementById('programmeForm:minAps');
+    const capacity = document.getElementById('programmeForm:maxCapacity');
+    const errorMsg = document.getElementById('programmeForm:subjectErrorMsg');
+
+    let valid = true;
+
+    // Reset previous styles
+    [subject, level, name, aps, capacity].forEach(field => field.style.border = '');
+
+    // Validate each field
+    if (!name.value.trim()) {
+      name.style.border = '2px solid red';
+      valid = false;
+    }
+
+    if (!aps.value.trim()) {
+      aps.style.border = '2px solid red';
+      valid = false;
+    }
+
+    if (!capacity.value.trim()) {
+      capacity.style.border = '2px solid red';
+      valid = false;
+    }
+
+    if (!subject.value) {
+      subject.style.border = '2px solid red';
+      valid = false;
+    }
+
+    if (!level.value) {
+      level.style.border = '2px solid red';
+      valid = false;
+    }
+
+    if (!valid) {
+      errorMsg.style.display = 'inline';
+    }
+
+    return valid;
+  }
+</script>
+
+  </div>
+
+  <div id="allProgrammesSection" class="form-section">
+    <h2>All Programmes</h2>
+    <h:form onsubmit="showOverlay()">
+      <div class="programme-grid">
+        <ui:repeat value="#{programmeController.allProgrammes}" var="programme">
+          <div class="programme-card">
+            <h:outputText value="#{programme.name}" styleClass="programme-title"/>
+            <h:outputText value="Minimum APS: #{programme.minAps}" styleClass="programme-aps"/>
+            <h:outputText value="Maximum Capacity: #{programme.maxCapacity}" styleClass="programme-aps"/>
+
+            <h:outputText value="Req Subjects:" styleClass="subject-header"/>
+            <h:dataTable value="#{programme.requiredSubjects}" var="requiredSubject" styleClass="subject-table">
+              <h:column>
+                <f:facet name="header">Subject Name</f:facet>
+                <h:outputText value="#{requiredSubject.subject.name}" />
+              </h:column>
+              <h:column>
+                <f:facet name="header">Minimum Level</f:facet>
+                <h:outputText value="#{requiredSubject.minLevel}"/>
+              </h:column>
+            </h:dataTable>
+          </div>
+        </ui:repeat>
+      </div>
+    </h:form>
+  </div>
+
+  <div id="subjectSection" class="form-section">
+    <h2>Subjects Section</h2>
+    <h:form onsubmit="showOverlay()">
+        
+
+      <h:panelGrid columns="2">
+        <h:outputLabel for="name" value="Subject Name"/>
+        <h:inputText id="name" value="#{subjectController.subjectName}"/>
+      </h:panelGrid>
+      <h:commandButton value="Save Subject" action="#{subjectController.saveSubject}" styleClass="fancy-button" />
+    </h:form>
+
+    <h:dataTable var="subject" value="#{subjectController.allSubjects}" styleClass="data-table">
+      <h:column>
+        <f:facet name="header">Subject Name</f:facet>
+        <h:outputText value="#{subject.name}"/>
+      </h:column>
+    </h:dataTable>
+  </div>
+
+  <div id="programmeLeaderSection" class="form-section">
+    <h2>Programme Leaders Section</h2>
+    <h3>Add Programme Leader</h3>
+    <h:form onsubmit="showOverlay()">
+      <h:panelGrid columns="2">
+        <h:outputLabel for="PLUsername" value="Programme Leader Username"/>
+        <h:inputText id="PLUsername" value="#{adminController.programmeLeaderUsername}"/>
+
+        <h:outputLabel for="PLPassword" value="Programme Leader Password"/>
+        <h:inputSecret id="PLPassword" value="#{adminController.programmeLeaderPassword}"/>
+
+        <h:outputLabel for="PLProgramme" value="Programme" />
+        <h:selectOneMenu id="PLProgramme" value="#{adminController.selectedProgrammeId}">
+          <f:selectItem itemLabel="Select Programme" itemValue="" />
+          <f:selectItems value="#{adminController.programmes}" var="programme" itemLabel="#{programme.name}" itemValue="#{programme.id}" />
+        </h:selectOneMenu>
+      </h:panelGrid>
+      <h:commandButton value="Add Programme Leader" action="#{adminController.saveProgrammeLeader}" styleClass="fancy-button" />
+    </h:form>
+    
+    <h3>Current Programme Leaders</h3>
+    <h:message for="programmeLeaderUsername" style="color: red;" />
+    
+    <h:dataTable value="#{adminController.programmeLeaders}" var="leader" 
+                styleClass="data-table" rendered="#{not empty adminController.programmeLeaders}">
+        <h:column>
+            <f:facet name="header">Username</f:facet>
+            <h:outputText value="#{leader.username}"/>
+        </h:column>
+        <h:column>
+            <f:facet name="header">Assigned Programme</f:facet>
+            <h:outputText value="#{leader.programme.name}" rendered="#{leader.programme != null}"/>
+            <h:outputText value="Not assigned" rendered="#{leader.programme == null}"/>
+        </h:column>
+    </h:dataTable>
+    
+    <h:outputText value="No programme leaders found." 
+                 rendered="#{empty adminController.programmeLeaders}" 
+                 style="font-style: italic;"/>
+  </div>
+
+
+  <div id="applicationPeriodSection" class="form-section">
+    <h:form>
+        <h2>Application Period</h2>
+
+        <p:messages />
+
+        <p:commandButton value="Load Current Period" action="#{applicationPeriodBean.loadCurrentPeriod}" update="@form" />
+
+        <h:panelGrid columns="2" cellpadding="5">
+
+            <h:outputLabel value="Opening Date:" for="opening" />
+            <p:calendar id="opening" value="#{applicationPeriodBean.openingDate}" pattern="yyyy-MM-dd" />
+
+            <h:outputLabel value="Closing Date:" for="closing" />
+            <p:calendar id="closing" value="#{applicationPeriodBean.closingDate}" pattern="yyyy-MM-dd" />
+
+        </h:panelGrid>
+
+        <br />
+        <p:commandButton value="Update Period" action="#{applicationPeriodBean.updatePeriod}" update="@form" />
+    </h:form>
+</div>
+
+<div id="allApplicationsSections" class="form-section active">
+    <h2>All Applications</h2>
+    <h:form>
+        <p:dataTable value="#{adminController.applications}"
+             var="app"
+             paginator="true"
+             rows="10"
+             styleClass="p-datatable-gridlines">
+             
+    <p:column headerText="Applicant">
+        #{app.applicant.studentNumber}
+    </p:column>
+    <p:column headerText="Program">
+        #{app.programme.name}
+    </p:column>
+    <p:column headerText="Status">
+        #{app.status}
+    </p:column>
+</p:dataTable>
+    </h:form>
+</div>
+
+
+
+</div>
+  
+<f:event type="preRenderView" listener="#{userBean.redirectIfNotLoggedInAsAdmin}" />
+
+
+<div id="overlay" class="overlay hidden">
+    <div class="spinner"></div>
+</div>
+
+  </h:body>
+</html>

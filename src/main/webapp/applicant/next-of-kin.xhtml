@@ -1,0 +1,557 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+    <title>Next of Kin Form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+
+    <style>
+        :root {
+            --primary-color: #1d2042;
+            --primary-light: #2a2e60;
+            --secondary-color: #3f51b5;
+            --accent-color: #ff5722;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --error-color: #f44336;
+            --text-primary: #212121;
+            --text-secondary: #757575;
+            --divider-color: #eeeeee;
+            --background-light: #f8f9fa;
+            --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            background-color: #f4f7fb;
+            font-family: "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-primary);
+        }
+
+        .form-wrapper {
+            max-width: 1100px;
+            margin: 120px auto;
+            background-color: #fff;
+            padding: 0;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+        }
+
+        .form-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px 30px;
+            position: relative;
+        }
+
+        .form-header h2 {
+            margin: 0;
+            font-weight: 500;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-header h2 i {
+            margin-right: 10px;
+        }
+
+        .progress-container {
+            background-color: #ffffff;
+            padding: 20px 30px;
+            border-bottom: 1px solid var(--divider-color);
+        }
+
+        .progress-bar {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .progress-bar:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 4px;
+            width: 100%;
+            background-color: #e0e0e0;
+            z-index: 0;
+        }
+
+        .progress-bar:after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 4px;
+            width: 50%;
+            background-color: var(--primary-color);
+            z-index: 0;
+        }
+
+        .step {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #fff;
+            border: 2px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+        }
+
+        .step.active {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #fff;
+        }
+
+        .step-label {
+            position: absolute;
+            top: 40px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            width: 100px;
+            text-align: center;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .step.active .step-label {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .form-content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .section-title {
+            background-color: var(--background-light);
+            padding: 12px 15px;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 15px;
+            border-left: 4px solid var(--primary-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 10px;
+            color: var(--primary-color);
+        }
+
+        .ui-panelgrid .ui-panelgrid-cell {
+            padding: 12px 8px;
+        }
+
+        .ui-panelgrid .ui-outputlabel,
+        .ui-panelgrid .ui-inputfield,
+        .ui-selectonemenu {
+            width: 100% !important;
+        }
+
+        .ui-inputfield {
+            padding: 10px !important;
+            border-radius: 6px !important;
+            border: 1px solid #ddd !important;
+            transition: border-color 0.3s, box-shadow 0.3s !important;
+        }
+
+        .ui-inputfield:focus {
+            border-color: var(--primary-color) !important;
+            box-shadow: 0 0 0 2px rgba(29, 32, 66, 0.2) !important;
+        }
+
+        .ui-selectonemenu {
+            border-radius: 6px !important;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+        }
+
+        .input-with-icon input {
+            padding-left: 35px !important;
+        }
+
+        .button-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding: 20px 30px;
+            background-color: var(--background-light);
+            border-top: 1px solid var(--divider-color);
+        }
+
+        .ui-button {
+            border-radius: 30px !important;
+            padding: 12px 20px !important;
+            font-weight: 500 !important;
+            transition: background-color 0.3s, transform 0.2s !important;
+        }
+
+        .ui-button.primary {
+            background-color: var(--primary-color) !important;
+            color: white !important;
+            border: none;
+        }
+
+        .ui-button.secondary {
+            background-color: #fff !important;
+            color: var(--primary-color) !important;
+            border: 2px solid var(--primary-color) !important;
+        }
+
+        .ui-button:hover {
+            background-color: var(--primary-light) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .ui-button.secondary:hover {
+            background-color: rgba(29, 32, 66, 0.05) !important;
+        }
+
+        .validation-message {
+            display: none;
+        }
+
+        .ui-message-error {
+            display: block !important;
+            margin-top: 5px;
+            background-color: transparent !important;
+            border: none !important;
+            color: var(--error-color) !important;
+            padding: 4px 0 !important;
+            font-size: 12px !important;
+        }
+
+        .input-hint {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 4px;
+        }
+
+        .required-field:after {
+            content: "*";
+            color: var(--error-color);
+            margin-left: 4px;
+        }
+
+        /* Additional phone input styles */
+        .phone-input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .phone-input-group .country-code {
+            width: 30% !important;
+        }
+
+        .phone-input-group .phone-number {
+            width: 70% !important;
+        }
+
+        .field-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        /* Success indicator for validated fields */
+        .field-success .ui-inputfield {
+            border-color: var(--success-color) !important;
+        }
+
+        .field-success:after {
+            content: "✓";
+            color: var(--success-color);
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .form-wrapper {
+                margin: 15px;
+                margin-top: 110px;
+                border-radius: 8px;
+            }
+            
+            .form-content {
+                padding: 15px;
+            }
+            
+            .button-bar {
+                padding: 15px;
+                flex-direction: column;
+            }
+            
+            .ui-button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
+
+            .step-label {
+                display: none;
+            }
+        }
+        .top-bar {
+                background-color: #1d2042;
+                color: #f9c73d;
+                padding: 15px 30px;
+                display: flex;
+                align-items: center;
+            }
+
+            .bar-title {
+                font-size: 1.4rem;
+                font-weight: bold;
+            }
+        
+            .top-bar {
+                background-color: #1d2042;
+                color: #f9c73d;
+                padding: 15px 30px;
+                display: flex;
+                align-items: center;
+                width: 100%;
+                position: absolute;
+                top: 0;
+            }
+
+            .logo-placeholder {
+                width: 50px;
+                height: 50px;
+                background-color: #ccc;
+                border-radius: 6px;
+                margin-right: 15px;
+            }
+
+            .bar-title {
+                font-size: 1.4rem;
+                font-weight: bold;
+            }
+
+            .logo {
+                width: 65px;
+                height: 65px;
+                margin-right: 5px;
+                border-radius: 50%;
+                object-fit: cover;
+            }
+    </style>
+</h:head>
+
+<h:body>
+    <f:metadata>
+        <f:event type="preRenderView" listener="#{nextOfKinBean.loadNextOfKin}" />
+    </f:metadata>
+    
+    <p:growl id="growl" showDetail="true" life="3000" />
+    <!-- Top UMP Bar -->
+    <div class="top-bar">
+        <h:graphicImage library="images" name="new-logo-preview.png" styleClass="logo" />
+        <div class="bar-title">University of Mpumalanga</div>
+    </div>
+    <h:form>
+        <div class="form-wrapper">
+            <div class="form-header">
+                <h2><i class="fas fa-user-friends"></i> Next of Kin Information</h2>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="step">
+                        1
+                        <div class="step-label">Personal Details</div>
+                    </div>
+                    <div class="step active">
+                        2
+                        <div class="step-label">Next of Kin</div>
+                    </div>
+                    <div class="step">
+                        3
+                        <div class="step-label">Education</div>
+                    </div>
+                    <div class="step">
+                        4
+                        <div class="step-label">Review</div>
+                    </div>
+                </div>
+            </div>
+
+            <h:messages globalOnly="true" styleClass="ui-messages-error ui-corner-all" />
+
+            <div class="form-content">
+                <!-- Next of Kin Information Section -->
+                <div class="section">
+                    <div class="section-title">
+                        <i class="fas fa-user-shield"></i> Next of Kin Details
+                    </div>
+                    
+                    <div class="field-grid">
+                        <div class="form-group">
+                            <h:outputLabel for="title" value="Title:" styleClass="required-field" />
+                            <p:selectOneMenu id="title" value="#{nextOfKinBean.title}" required="true" requiredMessage="Title is required.">
+                                <f:selectItem itemLabel="Select Title" itemValue="" />
+                                <f:selectItems value="#{['Mr.','Mrs.','Ms.','Dr.','Prof.','Rev.','Sir','Hon.']}" />
+                            </p:selectOneMenu>
+                            <p:message for="title" styleClass="validation-message" />
+                        </div>
+                        
+                        <div class="form-group">
+                            <h:outputLabel for="name" value="Name:" styleClass="required-field" />
+                            <p:inputText id="name" value="#{nextOfKinBean.name}" required="true"
+                                        validatorMessage="Name must contain letters only.">
+                                <f:validateRegex pattern="^[A-Za-z\s]+$" />
+                            </p:inputText>
+                            <p:message for="name" styleClass="validation-message" />
+                        </div>
+
+                        <div class="form-group">
+                            <h:outputLabel for="surname" value="Surname:" styleClass="required-field" />
+                            <p:inputText id="surname" value="#{nextOfKinBean.surname}" required="true"
+                                        validatorMessage="Surname must contain letters only.">
+                                <f:validateRegex pattern="^[A-Za-z\s]+$" />
+                            </p:inputText>
+                            <p:message for="surname" styleClass="validation-message" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact Information Section -->
+                <div class="section">
+                    <div class="section-title">
+                        <i class="fas fa-phone-alt"></i> Contact Information
+                    </div>
+                    
+                    <div class="field-grid">
+                        <div class="form-group">
+                            <h:outputLabel for="email" value="Email:" styleClass="required-field" />
+                            <div class="input-with-icon">
+                                <i class="fas fa-envelope"></i>
+                                <p:inputText id="email" value="#{nextOfKinBean.email}" required="true"
+                                            validatorMessage="The email address format is invalid.">
+                                    <f:validateRegex pattern="^[\w.%+-]+@[\w.-]+\.[A-Za-z]{2,}$" />
+                                </p:inputText>
+                            </div>
+                            <p:message for="email" styleClass="validation-message" />
+                        </div>
+
+                        <div class="form-group">
+                            <h:outputLabel for="phoneNumber" value="Phone Number:" styleClass="required-field" />
+                            <div class="phone-input-group">
+                                <p:selectOneMenu id="phoneCountryCode" value="#{nextOfKinBean.phoneCode}" styleClass="country-code" required="true">
+                                    <f:selectItem itemLabel="Code" itemValue="" />
+                                    <f:selectItem itemLabel="+27 (South Africa)" itemValue="+27" />
+                                    <f:selectItem itemLabel="+234 (Nigeria)" itemValue="+234" />
+                                    <f:selectItem itemLabel="+1 (USA)" itemValue="+1" />
+                                </p:selectOneMenu>
+
+                                <p:inputText id="phoneNumber" value="#{nextOfKinBean.phoneNumber}" required="true"
+                                            validatorMessage="Phone Number must be 9 digits and cannot start with 0."
+                                            styleClass="phone-number">
+                                    <f:validateRegex pattern="^[1-9][0-9]{8}$" />
+                                </p:inputText>
+                            </div>
+                            <p:message for="phoneNumber" styleClass="validation-message" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Address Information Section -->
+                <div class="section">
+                    <div class="section-title">
+                        <i class="fas fa-map-marker-alt"></i> Address Information
+                    </div>
+                    
+                    <div class="field-grid">
+                        <div class="form-group">
+                            <h:outputLabel for="homeAddress" value="Home Address:" styleClass="required-field" />
+                            <p:inputTextarea id="homeAddress" value="#{nextOfKinBean.homeAddress}" required="true" rows="3" />
+                            <p:message for="homeAddress" styleClass="validation-message" />
+                        </div>
+
+                        <div class="form-group">
+                            <h:outputLabel for="postalAddress" value="Postal Address:" styleClass="required-field" />
+                            <p:inputTextarea id="postalAddress" value="#{nextOfKinBean.postalAddress}" required="true" rows="3" />
+                            <p:message for="postalAddress" styleClass="validation-message" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="button-bar">
+                <p:commandButton value="Back"
+                                action="applicant-form.xhtml?faces-redirect=true"
+                                styleClass="ui-button secondary"
+                                icon="fas fa-arrow-left" />
+                            
+                <p:commandButton value="Save and Continue"
+                                action="#{nextOfKinBean.goToMarksSelection}"
+                                styleClass="ui-button primary"
+                                update="@form growl" 
+                                icon="fas fa-arrow-right" />
+            </div>
+        </div>
+    </h:form>
+
+    <!-- JavaScript for enhanced interactions -->
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Animation for form sections on page load
+            $(".section").each(function(i) {
+                $(this).delay(100 * i).animate({
+                    opacity: 1
+                }, 500);
+            });
+            
+            // Add field validation visual feedback
+            $(".ui-inputfield").blur(function() {
+                if ($(this).val() !== '') {
+                    $(this).parent().addClass("field-success");
+                } else {
+                    $(this).parent().removeClass("field-success");
+                }
+            });
+        });
+    </script>
+</h:body>
+</html>
