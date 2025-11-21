@@ -3,7 +3,7 @@ name: Build and Deploy WAR
 on:
   push:
     branches:
-      - main  # Run on pushes to main branch
+      - main
 
 jobs:
   build-and-deploy:
@@ -29,15 +29,23 @@ jobs:
           SERVER_HOST: ${{ secrets.SERVER_HOST }}
           REMOTE_PATH: ${{ secrets.REMOTE_PATH }}
         run: |
-          # Prepare SSH key
+          # Prepare temporary SSH key
           echo "$SSH_PRIVATE_KEY" > key.pem
           chmod 600 key.pem
 
-          # Copy WAR to server
+          # Ensure .ssh folder exists in the runner
+          mkdir -p ~/.ssh
+
+          # Add server to known_hosts (if not already trusted)
+          ssh-keygen -F $SERVER_HOST || ssh-keyscan -H $SERVER_HOST >> ~/.ssh/known_hosts
+
+          # Copy WAR file to server
           scp -i key.pem target/*.war $SERVER_USER@$SERVER_HOST:$REMOTE_PATH
 
-          # Undeploy if exists, then deploy to root context
+          # Undeploy old app if exists
           ssh -i key.pem $SERVER_USER@$SERVER_HOST "asadmin undeploy MyAdmissionSystem2-1.0-SNAPSHOT || true"
+
+          # Deploy new WAR to root context
           ssh -i key.pem $SERVER_USER@$SERVER_HOST "asadmin deploy --contextroot / $REMOTE_PATH/MyAdmissionSystem2-1.0-SNAPSHOT.war"
 
           # Remove temporary key
