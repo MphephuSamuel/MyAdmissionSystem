@@ -1,0 +1,44 @@
+name: Build and Deploy WAR
+
+on:
+  push:
+    branches:
+      - main  # Run on pushes to main branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 25
+
+      - name: Build WAR with Maven
+        run: mvn clean package -DskipTests
+
+      - name: Deploy WAR to GlassFish
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_HOST: ${{ secrets.SERVER_HOST }}
+          REMOTE_PATH: ${{ secrets.REMOTE_PATH }}
+        run: |
+          # Prepare SSH key
+          echo "$SSH_PRIVATE_KEY" > key.pem
+          chmod 600 key.pem
+
+          # Copy WAR to server
+          scp -i key.pem target/*.war $SERVER_USER@$SERVER_HOST:$REMOTE_PATH
+
+          # Undeploy if exists, then deploy to root context
+          ssh -i key.pem $SERVER_USER@$SERVER_HOST "asadmin undeploy MyAdmissionSystem2-1.0-SNAPSHOT || true"
+          ssh -i key.pem $SERVER_USER@$SERVER_HOST "asadmin deploy --contextroot / $REMOTE_PATH/MyAdmissionSystem2-1.0-SNAPSHOT.war"
+
+          # Remove temporary key
+          rm key.pem
