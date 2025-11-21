@@ -36,17 +36,17 @@ jobs:
           # Ensure .ssh folder exists in the runner
           mkdir -p ~/.ssh
 
-          # Add server to known_hosts (if not already trusted)
+          # Add server to known_hosts (avoid interactive host check)
           ssh-keygen -F $SERVER_HOST || ssh-keyscan -H $SERVER_HOST >> ~/.ssh/known_hosts
 
           # Copy WAR file to server
           scp -i key.pem target/*.war $SERVER_USER@$SERVER_HOST:$REMOTE_PATH
 
-          # Undeploy old app if exists
+          # Undeploy old app if exists (ignore errors)
           ssh -i key.pem $SERVER_USER@$SERVER_HOST "asadmin undeploy MyAdmissionSystem2-1.0-SNAPSHOT || true"
 
           # Deploy new WAR to root context
           ssh -i key.pem $SERVER_USER@$SERVER_HOST "asadmin deploy --contextroot / $REMOTE_PATH/MyAdmissionSystem2-1.0-SNAPSHOT.war"
 
-          # Remove temporary key
+          # Cleanup temporary key
           rm key.pem
